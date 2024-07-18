@@ -4,144 +4,79 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gestión de Clientes</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="css/normalize.css">
     <link rel="stylesheet" href="css/estilo.css">
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.5.0/font/bootstrap-icons.min.css">
 </head>
 <body>
-    <div class="container">
-        <h1 class="text-center mt-5">Gestión de Clientes</h1>
-        <div class="text-center mt-4">
-            <button class="btn btn-primary" data-toggle="modal" data-target="#modalAgregarCliente">Agregar Cliente</button>
+    <!-- Contenedor del menú superior -->
+    <div class="container-fluid bg-light p-3 d-flex justify-content-between align-items-center">
+        <h1 class="h3 mb-0">Nombre del Salón - Clientes</h1>
+        <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasMenu" aria-controls="offcanvasMenu">
+            ☰
+        </button>
+    </div>
+
+    <!-- Contenedor para cargar el menú offcanvas -->
+    <div id="menuContainer"></div>
+
+    <!-- Contenido principal -->
+    <div class="container mt-5">
+        <h1>Clientes</h1>
+        <p>Gestión de clientes del salón de belleza.</p>
+
+        <!-- Botón para agregar cliente -->
+        <div class="mb-3">
+            <button class="btn btn-success" onclick="window.location.href='agregar_cliente.html'">Agregar Cliente</button>
         </div>
-        <div class="row mt-5">
-            <div class="col-md-12">
-                <input type="text" id="buscadorClientes" class="form-control mb-4" placeholder="Buscar clientes">
-                <div id="listaClientes" class="list-group">
-                    <!-- Clientes cargados dinámicamente -->
-                </div>
-            </div>
+
+        <!-- Buscador de clientes -->
+        <div class="mb-3">
+            <input type="text" id="busquedaClientes" class="form-control" placeholder="Buscar clientes">
+        </div>
+
+        <!-- Lista de clientes -->
+        <div id="clientes" class="list-group">
+            <!-- Los clientes se mostrarán aquí -->
         </div>
     </div>
 
-    <!-- Modal para agregar cliente -->
-    <div class="modal fade" id="modalAgregarCliente" tabindex="-1" aria-labelledby="modalAgregarClienteTitle" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="modalAgregarClienteTitle">Agregar Cliente</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <form id="formAgregarCliente">
-                        <div class="form-group">
-                            <label for="nombre">Nombre:</label>
-                            <input type="text" class="form-control" id="nombre" name="nombre" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="telefono">Teléfono:</label>
-                            <input type="text" class="form-control" id="telefono" name="telefono" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="email">Email:</label>
-                            <input type="email" class="form-control" id="email" name="email" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="direccion">Dirección:</label>
-                            <input type="text" class="form-control" id="direccion" name="direccion">
-                        </div>
-                        <div class="form-group">
-                            <label for="fecha_nacimiento">Fecha de Nacimiento:</label>
-                            <input type="date" class="form-control" id="fecha_nacimiento" name="fecha_nacimiento">
-                        </div>
-                        <div class="form-group">
-                            <label for="sexo">Sexo:</label>
-                            <select class="form-control" id="sexo" name="sexo">
-                                <option value="Masculino">Masculino</option>
-                                <option value="Femenino">Femenino</option>
-                                <option value="Otro">Otro</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="servicio_preferido">Servicio Preferido:</label>
-                            <select class="form-control" id="servicio_preferido" name="servicio_preferido">
-                                <!-- Servicios cargados dinámicamente -->
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="notas">Notas:</label>
-                            <textarea class="form-control" id="notas" name="notas"></textarea>
-                        </div>
-                        <button type="submit" class="btn btn-success">Agregar Cliente</button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
+    <!-- Contenedor para cargar la barra de navegación inferior -->
+    <div id="navbarContainer"></div>
 
-    <!-- Modal para editar cliente -->
-    <div class="modal fade" id="modalCliente" tabindex="-1" aria-labelledby="modalClienteTitle" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="modalClienteTitle">Editar Cliente</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <form id="formEditarCliente">
-                        <div class="form-group">
-                            <label for="nombreModal">Nombre:</label>
-                            <input type="text" class="form-control" id="nombreModal" name="nombre" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="telefonoModal">Teléfono:</label>
-                            <input type="text" class="form-control" id="telefonoModal" name="telefono" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="emailModal">Email:</label>
-                            <input type="email" class="form-control" id="emailModal" name="email" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="direccionModal">Dirección:</label>
-                            <input type="text" class="form-control" id="direccionModal" name="direccion">
-                        </div>
-                        <div class="form-group">
-                            <label for="fecha_nacimientoModal">Fecha de Nacimiento:</label>
-                            <input type="date" class="form-control" id="fecha_nacimientoModal" name="fecha_nacimiento">
-                        </div>
-                        <div class="form-group">
-                            <label for="sexoModal">Sexo:</label>
-                            <select class="form-control" id="sexoModal" name="sexo">
-                                <option value="Masculino">Masculino</option>
-                                <option value="Femenino">Femenino</option>
-                                <option value="Otro">Otro</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="servicio_preferidoModal">Servicio Preferido:</label>
-                            <select class="form-control" id="servicio_preferidoModal" name="servicio_preferido">
-                                <!-- Servicios cargados dinámicamente -->
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="notasModal">Notas:</label>
-                            <textarea class="form-control" id="notasModal" name="notas"></textarea>
-                        </div>
-                        <button type="submit" class="btn btn-success">Guardar Cambios</button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/clientes.js"></script>
+    <script>
+        // Cargar el menú offcanvas y la barra de navegación desde archivos HTML externos
+        fetch('menu.html')
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById('menuContainer').innerHTML = data;
+                // Inicializar el modo oscuro si es necesario
+                const darkModeSwitch = document.getElementById('darkModeSwitch');
+                if (localStorage.getItem('theme') === 'dark') {
+                    document.body.classList.add('dark-mode');
+                    if (darkModeSwitch) darkModeSwitch.checked = true;
+                }
+                if (darkModeSwitch) {
+                    darkModeSwitch.addEventListener('change', function () {
+                        if (this.checked) {
+                            document.body.classList.add('dark-mode');
+                            localStorage.setItem('theme', 'dark');
+                        } else {
+                            document.body.classList.remove('dark-mode');
+                            localStorage.setItem('theme', 'light');
+                        }
+                    });
+                }
+            });
 
-    <script src="js/cliente.js"></script>
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+        fetch('navbar.html')
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById('navbarContainer').innerHTML = data;
+            });
+    </script>
 </body>
 </html>

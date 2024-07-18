@@ -4,60 +4,79 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gestión de Reservas</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="css/normalize.css">
     <link rel="stylesheet" href="css/estilo.css">
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.5.0/font/bootstrap-icons.min.css">
 </head>
 <body>
-    <div class="container">
-        <h1 class="text-center mt-5">Gestión de Reservas</h1>
-        <div class="section">
-            <h2>Reservas</h2>
-            <form id="formReserva">
-                <div class="form-group">
-                    <label for="cliente_id">Cliente:</label>
-                    <select class="form-control" id="cliente_id" name="cliente_id" required>
-                        <!-- Opciones cargadas dinámicamente -->
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="fecha_reserva">Fecha y Hora:</label>
-                    <input type="datetime-local" class="form-control" id="fecha_reserva" name="fecha_reserva" required>
-                </div>
-                <div class="form-group">
-                    <label for="servicio">Servicio:</label>
-                    <input type="text" class="form-control" id="servicio" name="servicio" required>
-                </div>
-                <button type="submit" class="btn btn-success">Agregar Reserva</button>
-            </form>
-            <div id="listaReservas" class="list-group mt-4">
-                <!-- Lista de reservas cargada dinámicamente -->
-            </div>
+    <!-- Contenedor del menú superior -->
+    <div class="container-fluid bg-light p-3 d-flex justify-content-between align-items-center">
+        <h1 class="h3 mb-0">Nombre del Salón - Reservas</h1>
+        <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasMenu" aria-controls="offcanvasMenu">
+            ☰
+        </button>
+    </div>
+
+    <!-- Contenedor para cargar el menú offcanvas -->
+    <div id="menuContainer"></div>
+
+    <!-- Contenido principal -->
+    <div class="container mt-5">
+        <h1>Reservas</h1>
+        <p>Gestión de reservas del salón de belleza.</p>
+
+        <!-- Botón para agregar reserva -->
+        <div class="mb-3">
+            <button class="btn btn-success" onclick="window.location.href='agregar_reserva.html'">Agregar Reserva</button>
         </div>
-    <!-- Barra de navegación inferior -->
-    <div class="nav">
-        <div class="nav__link" onclick="window.location.href='index.html'">
-            <i class="fas fa-home"></i>
-            <span class="nav__text">Home</span>
+
+        <!-- Buscador de reservas -->
+        <div class="mb-3">
+            <input type="text" id="busquedaReservas" class="form-control" placeholder="Buscar reservas">
         </div>
-        <div class="nav__link" onclick="window.location.href='clientes.html'">
-            <i class="fas fa-users"></i>
-            <span class="nav__text">Clientes</span>
-        </div>
-        <div class="nav__link nav__link--active">
-            <i class="fas fa-calendar-alt"></i>
-            <span class="nav__text">Reservas</span>
-        </div>
-        <div class="nav__link" onclick="window.location.href='configuracion.html'">
-            <i class="fas fa-cogs"></i>
-            <span class="nav__text">Configuración</span>
+
+        <!-- Lista de reservas -->
+        <div id="reservas" class="list-group">
+            <!-- Las reservas se mostrarán aquí -->
         </div>
     </div>
 
-    <script src="js/reserva.js"></script>
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <!-- Contenedor para cargar la barra de navegación inferior -->
+    <div id="navbarContainer"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/reservas.js"></script>
+    <script>
+        // Cargar el menú offcanvas y la barra de navegación desde archivos HTML externos
+        fetch('menu.html')
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById('menuContainer').innerHTML = data;
+                // Inicializar el modo oscuro si es necesario
+                const darkModeSwitch = document.getElementById('darkModeSwitch');
+                if (localStorage.getItem('theme') === 'dark') {
+                    document.body.classList.add('dark-mode');
+                    if (darkModeSwitch) darkModeSwitch.checked = true;
+                }
+                if (darkModeSwitch) {
+                    darkModeSwitch.addEventListener('change', function () {
+                        if (this.checked) {
+                            document.body.classList.add('dark-mode');
+                            localStorage.setItem('theme', 'dark');
+                        } else {
+                            document.body.classList.remove('dark-mode');
+                            localStorage.setItem('theme', 'light');
+                        }
+                    });
+                }
+            });
+
+        fetch('navbar.html')
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById('navbarContainer').innerHTML = data;
+            });
+    </script>
 </body>
 </html>

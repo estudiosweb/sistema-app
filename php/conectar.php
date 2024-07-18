@@ -2,7 +2,7 @@
 $servername = "localhost"; 
 $username = "root"; 
 $password = "mysql";
-$dbname = "salon_belleza";
+$dbname = "salon";
 
 $response = array();
 
