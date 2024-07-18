@@ -1,0 +1,27 @@
+/* estilos para el modo claro */
+body {
+    background-color: #ffffff;
+    color: #000000;
+}
+
+.offcanvas-header, .offcanvas-body, .list-group-item {
+    background-color: #ffffff;
+    color: #000000;
+}
+
+/* estilos para el modo oscuro */
+body.dark-mode {
+    background-color: #121212;
+    color: #ffffff;
+}
+
+body.dark-mode .offcanvas-header, 
+body.dark-mode .offcanvas-body, 
+body.dark-mode .list-group-item {
+    background-color: #121212;
+    color: #ffffff;
+}
+
+body.dark-mode .list-group-item-action:hover {
+    background-color: #2c2c2c;
+}

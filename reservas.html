@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Reservas</title>
+    <link rel="stylesheet" href="css/normalize.css">
+    <link rel="stylesheet" href="css/estilo.css">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <h1 class="text-center mt-5">Gestión de Reservas</h1>
+        <div class="section">
+            <h2>Reservas</h2>
+            <form id="formReserva">
+                <div class="form-group">
+                    <label for="cliente_id">Cliente:</label>
+                    <select class="form-control" id="cliente_id" name="cliente_id" required>
+                        <!-- Opciones cargadas dinámicamente -->
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="fecha_reserva">Fecha y Hora:</label>
+                    <input type="datetime-local" class="form-control" id="fecha_reserva" name="fecha_reserva" required>
+                </div>
+                <div class="form-group">
+                    <label for="servicio">Servicio:</label>
+                    <input type="text" class="form-control" id="servicio" name="servicio" required>
+                </div>
+                <button type="submit" class="btn btn-success">Agregar Reserva</button>
+            </form>
+            <div id="listaReservas" class="list-group mt-4">
+                <!-- Lista de reservas cargada dinámicamente -->
+            </div>
+        </div>
+    <!-- Barra de navegación inferior -->
+    <div class="nav">
+        <div class="nav__link" onclick="window.location.href='index.html'">
+            <i class="fas fa-home"></i>
+            <span class="nav__text">Home</span>
+        </div>
+        <div class="nav__link" onclick="window.location.href='clientes.html'">
+            <i class="fas fa-users"></i>
+            <span class="nav__text">Clientes</span>
+        </div>
+        <div class="nav__link nav__link--active">
+            <i class="fas fa-calendar-alt"></i>
+            <span class="nav__text">Reservas</span>
+        </div>
+        <div class="nav__link" onclick="window.location.href='configuracion.html'">
+            <i class="fas fa-cogs"></i>
+            <span class="nav__text">Configuración</span>
+        </div>
+    </div>
+
+    <script src="js/reserva.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
