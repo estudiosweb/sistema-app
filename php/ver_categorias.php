@@ -1,29 +1,19 @@
 <?php
 include 'conectar.php';
 
-$response = array();
+$sql = "SELECT * FROM categorias";
+$result = mysqli_query($conn, $sql);
 
-try {
-    $sql = "SELECT id, nombre FROM categorias";
-    $result = $conn->query($sql);
+$categorias = [];
 
-    if ($result->num_rows > 0) {
-        $response['status'] = 'success';
-        $response['categorias'] = array();
-        while ($row = $result->fetch_assoc()) {
-            $response['categorias'][] = $row;
-        }
-    } else {
-        $response['status'] = 'error';
-        $response['message'] = 'No se encontraron categorías.';
+if (mysqli_num_rows($result) > 0) {
+    while ($row = mysqli_fetch_assoc($result)) {
+        $categorias[] = $row;
     }
-} catch (Exception $e) {
-    $response['status'] = 'error';
-    $response['message'] = $e->getMessage();
+    echo json_encode(['status' => 'success', 'categorias' => $categorias]);
+} else {
+    echo json_encode(['status' => 'error', 'message' => 'No hay categorías disponibles']);
 }
 
-$conn->close();
-
-header('Content-Type: application/json');
-echo json_encode($response);
+mysqli_close($conn);
 ?>

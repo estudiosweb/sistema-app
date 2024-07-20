@@ -1,20 +1,31 @@
 <?php
 include 'conectar.php';
 
-$id = $_POST['id'];
-$nombre = $_POST['nombre'];
-$telefono = $_POST['telefono'];
-$email = $_POST['email'];
-$direccion = $_POST['direccion'];
+$response = array();
 
-$sql = "UPDATE clientes SET nombre='$nombre', telefono='$telefono', email='$email', direccion='$direccion' WHERE id='$id'";
+try {
+    $id = intval($_POST['id']);
+    $cliente_id = $_POST['cliente_id'];
+    $servicio_id = $_POST['servicio'];
+    $fecha_reserva = $_POST['fecha_reserva'];
+    $hora_reserva = $_POST['hora_reserva'];
 
-if ($conn->query($sql) === TRUE) {
-    echo "Cliente actualizado exitosamente";
-} else {
-    echo "Error: " . $sql . "<br>" . $conn->error;
+    $sql = "UPDATE reservas SET cliente_id='$cliente_id', servicio_id='$servicio_id', fecha_reserva='$fecha_reserva', hora_reserva='$hora_reserva' 
+            WHERE id='$id'";
+
+    if ($conn->query($sql) === TRUE) {
+        $response['status'] = 'success';
+    } else {
+        throw new Exception("Error al actualizar la reserva: " . $conn->error);
+    }
+
+} catch (Exception $e) {
+    $response['status'] = 'error';
+    $response['message'] = $e->getMessage();
 }
 
 $conn->close();
-?>
 
+header('Content-Type: application/json');
+echo json_encode($response);
+?>

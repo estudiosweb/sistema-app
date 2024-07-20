@@ -4,7 +4,10 @@ include 'conectar.php';
 $response = array();
 
 try {
-    $sql = "SELECT * FROM reservas";
+    $sql = "SELECT reservas.id, reservas.fecha_reserva, reservas.hora_reserva, clientes.nombre AS cliente_nombre, servicios.nombre AS servicio_nombre 
+            FROM reservas
+            JOIN clientes ON reservas.cliente_id = clientes.id
+            JOIN servicios ON reservas.servicio_id = servicios.id";
     $result = $conn->query($sql);
 
     if (!$result) {
@@ -13,22 +16,22 @@ try {
 
     $reservas = array();
     while ($row = $result->fetch_assoc()) {
-        $reservas[] = $row;
+        $reservas[] = array(
+            'title' => $row['cliente_nombre'] . ' - ' . $row['servicio_nombre'],
+            'start' => $row['fecha_reserva'] . 'T' . $row['hora_reserva'],
+            'id' => $row['id']
+        );
     }
 
-    if (count($reservas) > 0) {
-        $response['status'] = 'success';
-        $response['reservas'] = $reservas;
-    } else {
-        $response['status'] = 'error';
-        $response['message'] = 'No se encontraron reservas';
-    }
+    $response['status'] = 'success';
+    $response['reservas'] = $reservas;
 } catch (Exception $e) {
     $response['status'] = 'error';
     $response['message'] = $e->getMessage();
 }
 
 $conn->close();
+
 header('Content-Type: application/json');
 echo json_encode($response);
 ?>

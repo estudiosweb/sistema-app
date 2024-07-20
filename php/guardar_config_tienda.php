@@ -1,29 +1,46 @@
 <?php
-include 'conectar.php';
-include 'utilidades.php';
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
 
-$nombreNegocio = sanitizeInput($_POST['nombreNegocio']);
-$direccionNegocio = sanitizeInput($_POST['direccionNegocio']);
-$telefonoNegocio = sanitizeInput($_POST['telefonoNegocio']);
-$whatsappNegocio = sanitizeInput($_POST['whatsappNegocio']);
-$logotipo = file_get_contents($_FILES['logotipo']['tmp_name']);
+include 'conectar.php';
+
 $response = array();
 
 try {
-    $sql = "SELECT * FROM configuracion_tienda LIMIT 1";
-    $result = $conn->query($sql);
+    $nombre_negocio = $_POST['nombre_negocio'];
+    $direccion_negocio = $_POST['direccion_negocio'];
+    $telefono_negocio = $_POST['telefono_negocio'];
+    $whatsapp_negocio = $_POST['whatsapp_negocio'];
+    $logotipo = '';
 
-    if ($result->num_rows > 0) {
-        $sql = "UPDATE configuracion_tienda SET nombre_negocio='$nombreNegocio', direccion_negocio='$direccionNegocio', telefono_negocio='$telefonoNegocio', whatsapp_negocio='$whatsappNegocio', logotipo='$logotipo' WHERE id=1";
-    } else {
-        $sql = "INSERT INTO configuracion_tienda (nombre_negocio, direccion_negocio, telefono_negocio, whatsapp_negocio, logotipo) VALUES ('$nombreNegocio', '$direccionNegocio', '$telefonoNegocio', '$whatsappNegocio', '$logotipo')";
+    // Verificar si se subió un archivo y si es una imagen válida
+    if (isset($_FILES['logotipo']) && $_FILES['logotipo']['error'] === UPLOAD_ERR_OK) {
+        $file_tmp = $_FILES['logotipo']['tmp_name'];
+        $file_name = basename($_FILES['logotipo']['name']);
+        $file_type = mime_content_type($file_tmp);
+
+        $allowed_types = ['image/jpeg', 'image/png', 'image/gif'];
+        if (!in_array($file_type, $allowed_types)) {
+            throw new Exception("Solo se permiten archivos de imagen (JPEG, PNG, GIF).");
+        }
+
+        $logotipo = 'uploads/' . $file_name;
+        if (!move_uploaded_file($file_tmp, $logotipo)) {
+            throw new Exception("Error al mover el archivo subido.");
+        }
+    }
+
+    $sql = "UPDATE configuracion SET nombre_negocio='$nombre_negocio', direccion_negocio='$direccion_negocio', telefono_negocio='$telefono_negocio', whatsapp_negocio='$whatsapp_negocio'";
+
+    if ($logotipo) {
+        $sql .= ", logotipo='$logotipo'";
     }
 
     if ($conn->query($sql) === TRUE) {
         $response['status'] = 'success';
-        $response['message'] = 'Configuración guardada exitosamente';
     } else {
-        throw new Exception("Error: " . $sql . "<br>" . $conn->error);
+        throw new Exception("Error al actualizar la configuración de la tienda: " . $conn->error);
     }
 } catch (Exception $e) {
     $response['status'] = 'error';

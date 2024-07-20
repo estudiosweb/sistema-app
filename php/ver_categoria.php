@@ -4,24 +4,21 @@ include 'conectar.php';
 $response = array();
 
 try {
-    $sql = "SELECT * FROM clientes";
+    $id = intval($_GET['id']);
+    $sql = "SELECT * FROM categorias WHERE id='$id'";
+
     $result = $conn->query($sql);
 
     if (!$result) {
         throw new Exception("Error en la consulta SQL: " . $conn->error);
     }
 
-    $clientes = array();
-    while ($row = $result->fetch_assoc()) {
-        $clientes[] = $row;
-    }
-
-    if (count($clientes) > 0) {
+    if ($result->num_rows > 0) {
         $response['status'] = 'success';
-        $response['clientes'] = $clientes;
+        $response['categoria'] = $result->fetch_assoc();
     } else {
         $response['status'] = 'error';
-        $response['message'] = 'No se encontraron clientes';
+        $response['message'] = 'Categoría no encontrada';
     }
 } catch (Exception $e) {
     $response['status'] = 'error';
@@ -29,6 +26,7 @@ try {
 }
 
 $conn->close();
+
 header('Content-Type: application/json');
 echo json_encode($response);
 ?>

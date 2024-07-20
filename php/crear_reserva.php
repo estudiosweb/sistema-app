@@ -1,17 +1,30 @@
 <?php
 include 'conectar.php';
 
-$cliente_id = $_POST['cliente_id'];
-$fecha_reserva = $_POST['fecha_reserva'];
-$servicio = $_POST['servicio'];
+$response = array();
 
-$sql = "INSERT INTO reservas (cliente_id, fecha_reserva, servicio) VALUES ('$cliente_id', '$fecha_reserva', '$servicio')";
+try {
+    $cliente_id = $_POST['cliente_id'];
+    $servicio_id = $_POST['servicio'];
+    $fecha_reserva = $_POST['fecha_reserva'];
+    $hora_reserva = $_POST['hora_reserva'];
 
-if ($conn->query($sql) === TRUE) {
-    echo "Nueva reserva creada exitosamente";
-} else {
-    echo "Error: " . $sql . "<br>" . $conn->error;
+    $sql = "INSERT INTO reservas (cliente_id, servicio_id, fecha_reserva, hora_reserva) 
+            VALUES ('$cliente_id', '$servicio_id', '$fecha_reserva', '$hora_reserva')";
+
+    if ($conn->query($sql) === TRUE) {
+        $response['status'] = 'success';
+    } else {
+        throw new Exception("Error al insertar la reserva: " . $conn->error);
+    }
+
+} catch (Exception $e) {
+    $response['status'] = 'error';
+    $response['message'] = $e->getMessage();
 }
 
 $conn->close();
+
+header('Content-Type: application/json');
+echo json_encode($response);
 ?>

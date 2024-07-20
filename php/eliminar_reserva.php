@@ -1,15 +1,26 @@
 <?php
 include 'conectar.php';
 
-$id = $_POST['id'];
+$response = array();
 
-$sql = "DELETE FROM reservas WHERE id='$id'";
+try {
+    $id = intval($_GET['id']);
 
-if ($conn->query($sql) === TRUE) {
-    echo "Reserva eliminada exitosamente";
-} else {
-    echo "Error: " . $sql . "<br>" . $conn->error;
+    $sql = "DELETE FROM reservas WHERE id='$id'";
+
+    if ($conn->query($sql) === TRUE) {
+        $response['status'] = 'success';
+    } else {
+        throw new Exception("Error al eliminar la reserva: " . $conn->error);
+    }
+
+} catch (Exception $e) {
+    $response['status'] = 'error';
+    $response['message'] = $e->getMessage();
 }
 
 $conn->close();
+
+header('Content-Type: application/json');
+echo json_encode($response);
 ?>

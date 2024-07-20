@@ -1,19 +1,18 @@
 <?php
 include 'conectar.php';
-include 'utilidades.php';
-
-$dias = sanitizeInput($_POST['diasAtencion']);
-$horas = sanitizeInput($_POST['horasAtencion']);
 
 $response = array();
 
 try {
-    $sql = "INSERT INTO horarios (dias, horas) VALUES ('$dias', '$horas')";
+    $dia = $_POST['dia'];
+    $hora_inicio = $_POST['hora_inicio'];
+    $hora_fin = $_POST['hora_fin'];
+
+    $sql = "INSERT INTO horarios (dia, hora_inicio, hora_fin) VALUES ('$dia', '$hora_inicio', '$hora_fin')";
     if ($conn->query($sql) === TRUE) {
         $response['status'] = 'success';
-        $response['message'] = 'Horario agregado exitosamente';
     } else {
-        throw new Exception("Error: " . $sql . "<br>" . $conn->error);
+        throw new Exception("Error al insertar el horario: " . $conn->error);
     }
 } catch (Exception $e) {
     $response['status'] = 'error';

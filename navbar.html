@@ -1,13 +1,75 @@
-<nav class="navbar navbar-expand-lg navbar-light bg-light fixed-bottom" id="bottomNavbar">
-    <div class="container-fluid d-flex justify-content-around">
-        <a href="clientes.html" class="btn btn-primary">
-            <i class="bi bi-people-fill"></i>
-            <span>Clientes</span>
+<nav class="navbar fixed-bottom navbar-light bg-light" id="bottomNavbar">
+    <div class="container-fluid justify-content-around" id="navbarContainer">
+        <a href="index.html" class="btn btn-light" id="btnHome">
+            <i class="bi bi-house"></i><br>Home
         </a>
-        <a href="reservas.html" class="btn btn-primary">
-            <i class="bi bi-calendar-check-fill"></i>
-            <span>Reservas</span>
+        <a href="clientes.html" class="btn btn-light" id="btnClientes">
+            <i class="bi bi-people"></i><br>Clientes
+        </a>
+        <a href="reservas.html" class="btn btn-light" id="btnReservas">
+            <i class="bi bi-calendar-check"></i><br>Reservas
         </a>
     </div>
 </nav>
 
+<script>
+    fetch('php/ver_nombre_tienda.php')
+        .then(response => response.json())
+        .then(data => {
+            document.getElementById('nombreTienda').textContent = data.nombre_negocio;
+        })
+        .catch(error => console.error('Error:', error));
+
+    // Modo oscuro
+    const currentTheme = localStorage.getItem('theme');
+    const bottomNavbar = document.getElementById('bottomNavbar');
+    const btnHome = document.getElementById('btnHome');
+    const btnClientes = document.getElementById('btnClientes');
+    const btnReservas = document.getElementById('btnReservas');
+
+    if (currentTheme === 'dark') {
+        bottomNavbar.classList.remove('bg-light');
+        bottomNavbar.classList.add('bg-dark', 'navbar-dark');
+        btnHome.classList.add('btn-dark');
+        btnClientes.classList.add('btn-dark');
+        btnReservas.classList.add('btn-dark');
+    }
+
+    const darkModeSwitch = document.getElementById('darkModeSwitch');
+    if (darkModeSwitch) {
+        darkModeSwitch.addEventListener('change', function () {
+            if (this.checked) {
+                document.body.classList.add('dark-mode');
+                bottomNavbar.classList.remove('bg-light');
+                bottomNavbar.classList.add('bg-dark', 'navbar-dark');
+                btnHome.classList.add('btn-dark');
+                btnClientes.classList.add('btn-dark');
+                btnReservas.classList.add('btn-dark');
+                localStorage.setItem('theme', 'dark');
+            } else {
+                document.body.classList.remove('dark-mode');
+                bottomNavbar.classList.remove('bg-dark', 'navbar-dark');
+                bottomNavbar.classList.add('bg-light', 'navbar-light');
+                btnHome.classList.remove('btn-dark');
+                btnClientes.classList.remove('btn-dark');
+                btnReservas.classList.remove('btn-dark');
+                localStorage.setItem('theme', 'light');
+            }
+        });
+    }
+</script>
+
+<style>
+    #bottomNavbar {
+        height: 80px; /* Ajusta esta altura según lo necesites */
+    }
+    #navbarContainer a {
+        font-size: 0.875rem; /* Ajusta el tamaño de la fuente si es necesario */
+        padding: 5px; /* Ajusta el relleno si es necesario */
+        line-height: 1.2; /* Ajusta el espacio entre líneas */
+    }
+    #navbarContainer a i {
+        font-size: 1.25rem; /* Ajusta el tamaño del icono si es necesario */
+        margin-bottom: -5px; /* Ajusta el margen inferior del icono */
+    }
+</style>

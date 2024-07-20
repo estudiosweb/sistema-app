@@ -28,7 +28,7 @@
 
         <!-- Botón para agregar cliente -->
         <div class="mb-3">
-            <button class="btn btn-success" onclick="window.location.href='agregar_cliente.html'">Agregar Cliente</button>
+            <button class="btn btn-success" onclick="$('#modalAgregarCliente').modal('show')">Agregar Cliente</button>
         </div>
 
         <!-- Buscador de clientes -->
@@ -37,15 +37,160 @@
         </div>
 
         <!-- Lista de clientes -->
-        <div id="clientes" class="list-group">
+        <div id="listaClientes" class="list-group">
             <!-- Los clientes se mostrarán aquí -->
+        </div>
+    </div>
+
+  <!-- Modal para agregar cliente -->
+<div class="modal fade" id="modalAgregarCliente" tabindex="-1" aria-labelledby="modalAgregarClienteLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalAgregarClienteLabel">Agregar Cliente</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="formAgregarCliente">
+                    <div class="mb-3">
+                        <label for="nombre" class="form-label">Nombre</label>
+                        <input type="text" class="form-control" id="nombre" name="nombre" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="rut" class="form-label">RUT</label>
+                        <input type="text" class="form-control" id="rut" name="rut" placeholder="11.111.111-1" required data-bs-toggle="tooltip" title="Ingrese un Rut correcto">
+                    </div>
+                    <div class="mb-3">
+                        <label for="direccion" class="form-label">Dirección</label>
+                        <input type="text" class="form-control" id="direccion" name="direccion">
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col">
+                            <label for="fecha_nacimiento" class="form-label">Fecha de Nacimiento</label>
+                            <input type="date" class="form-control" id="fecha_nacimiento" name="fecha_nacimiento">
+                        </div>
+                        <div class="col">
+                            <label for="sexo" class="form-label">Sexo</label>
+                            <select class="form-select" id="sexo" name="sexo">
+                                <option value="Masculino">Masculino</option>
+                                <option value="Femenino">Femenino</option>
+                                <option value="Otro">Otro</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="telefono" class="form-label">Teléfono</label>
+                        <input type="text" class="form-control" id="telefono" name="telefono" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email</label>
+                        <input type="email" class="form-control" id="email" name="email">
+                    </div>
+                    <div class="mb-3">
+                        <label for="servicio_preferido" class="form-label">Servicio Preferido</label>
+                        <select class="form-select" id="servicio_preferido" name="servicio_preferido"></select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="notas" class="form-label">Notas</label>
+                        <textarea class="form-control" id="notas" name="notas" rows="3"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Guardar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal para editar cliente -->
+<div class="modal fade" id="modalEditarCliente" tabindex="-1" aria-labelledby="modalEditarClienteLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalEditarClienteLabel">Editar Cliente</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="formEditarCliente">
+                    <input type="hidden" id="idModal" name="id">
+                    <div class="mb-3">
+                        <label for="nombreModal" class="form-label">Nombre</label>
+                        <input type="text" class="form-control" id="nombreModal" name="nombre" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="rutModal" class="form-label">RUT</label>
+                        <input type="text" class="form-control" id="rutModal" name="rut" placeholder="11.111.111-1" readonly required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="direccionModal" class="form-label">Dirección</label>
+                        <input type="text" class="form-control" id="direccionModal" name="direccion">
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col">
+                            <label for="fecha_nacimientoModal" class="form-label">Fecha de Nacimiento</label>
+                            <input type="date" class="form-control" id="fecha_nacimientoModal" name="fecha_nacimiento">
+                        </div>
+                        <div class="col">
+                            <label for="sexoModal" class="form-label">Sexo</label>
+                            <select class="form-select" id="sexoModal" name="sexo">
+                                <option value="Masculino">Masculino</option>
+                                <option value="Femenino">Femenino</option>
+                                <option value="Otro">Otro</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="telefonoModal" class="form-label">Teléfono</label>
+                        <input type="text" class="form-control" id="telefonoModal" name="telefono" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="emailModal" class="form-label">Email</label>
+                        <input type="email" class="form-control" id="emailModal" name="email">
+                    </div>
+                    <div class="mb-3">
+                        <label for="servicio_preferidoModal" class="form-label">Servicio Preferido</label>
+                        <select class="form-select" id="servicio_preferidoModal" name="servicio_preferido"></select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="notasModal" class="form-label">Notas</label>
+                        <textarea class="form-control" id="notasModal" name="notas" rows="3"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+    <!-- Modal para ver detalles del cliente -->
+    <div class="modal fade" id="modalVerCliente" tabindex="-1" aria-labelledby="modalVerClienteLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalVerClienteLabel">Detalles del Cliente</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p><strong>Nombre:</strong> <span id="nombreVer"></span></p>
+                    <p><strong>RUT:</strong> <span id="rutVer"></span></p>
+                    <p><strong>Dirección:</strong> <span id="direccionVer"></span></p>
+                    <p><strong>Fecha de Nacimiento:</strong> <span id="fecha_nacimientoVer"></span></p>
+                    <p><strong>Sexo:</strong> <span id="sexoVer"></span></p>
+                    <p><strong>Teléfono:</strong> <span id="telefonoVer"></span></p>
+                    <p><strong>Email:</strong> <span id="emailVer"></span></p>
+                    <p><strong>Servicio Preferido:</strong> <span id="servicio_preferidoVer"></span></p>
+                    <p><strong>Notas:</strong> <span id="notasVer"></span></p>
+                </div>
+            </div>
         </div>
     </div>
 
     <!-- Contenedor para cargar la barra de navegación inferior -->
     <div id="navbarContainer"></div>
 
+    <!-- Incluyendo jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/rut.js"></script>
     <script src="js/clientes.js"></script>
     <script>
         // Cargar el menú offcanvas y la barra de navegación desde archivos HTML externos
@@ -53,23 +198,25 @@
             .then(response => response.text())
             .then(data => {
                 document.getElementById('menuContainer').innerHTML = data;
-                // Inicializar el modo oscuro si es necesario
+
+                // Ejecutar el código relacionado con el modo oscuro después de cargar el menú
                 const darkModeSwitch = document.getElementById('darkModeSwitch');
-                if (localStorage.getItem('theme') === 'dark') {
+                const currentTheme = localStorage.getItem('theme');
+
+                if (currentTheme === 'dark') {
                     document.body.classList.add('dark-mode');
-                    if (darkModeSwitch) darkModeSwitch.checked = true;
+                    darkModeSwitch.checked = true;
                 }
-                if (darkModeSwitch) {
-                    darkModeSwitch.addEventListener('change', function () {
-                        if (this.checked) {
-                            document.body.classList.add('dark-mode');
-                            localStorage.setItem('theme', 'dark');
-                        } else {
-                            document.body.classList.remove('dark-mode');
-                            localStorage.setItem('theme', 'light');
-                        }
-                    });
-                }
+
+                darkModeSwitch.addEventListener('change', function () {
+                    if (this.checked) {
+                        document.body.classList.add('dark-mode');
+                        localStorage.setItem('theme', 'dark');
+                    } else {
+                        document.body.classList.remove('dark-mode');
+                        localStorage.setItem('theme', 'light');
+                    }
+                });
             });
 
         fetch('navbar.html')

@@ -21,10 +21,14 @@ document.addEventListener('DOMContentLoaded', function () {
     const reservasContainer = document.getElementById('reservas');
 
     const cargarReservas = (query = '') => {
-        fetch(`php/obtener_reservas.php?busqueda=${query}`)
+        fetch(`php/ver_reservas.php?busqueda=${query}`)
             .then(response => response.json())
             .then(data => {
                 reservasContainer.innerHTML = '';
+                if (!Array.isArray(data)) {
+                    reservasContainer.innerHTML = '<p class="text-center">No se encontraron reservas</p>';
+                    return;
+                }
                 if (data.length === 0) {
                     reservasContainer.innerHTML = '<p class="text-center">No se encontraron reservas</p>';
                 } else {
@@ -39,6 +43,10 @@ document.addEventListener('DOMContentLoaded', function () {
                         reservasContainer.appendChild(reservaElement);
                     });
                 }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                reservasContainer.innerHTML = '<p class="text-center">Error al cargar las reservas</p>';
             });
     };
 

@@ -1,25 +1,22 @@
 <?php
 include 'conectar.php';
 
-$id = $_POST['id'];
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
 
-$response = array();
+$id = $_GET['id'];
 
-try {
-    $sql = "DELETE FROM clientes WHERE id='$id'";
-    if ($conn->query($sql) === TRUE) {
-        $response['status'] = 'success';
-        $response['message'] = 'Cliente eliminado exitosamente';
-    } else {
-        throw new Exception("Error: " . $sql . "<br>" . $conn->error);
-    }
-} catch (Exception $e) {
-    $response['status'] = 'error';
-    $response['message'] = $e->getMessage();
+$sql = "DELETE FROM clientes WHERE id = ?";
+$stmt = $conn->prepare($sql);
+$stmt->bind_param('i', $id);
+
+if ($stmt->execute()) {
+    echo json_encode(['status' => 'success']);
+} else {
+    echo json_encode(['status' => 'error', 'message' => 'Error al eliminar el cliente']);
 }
 
+$stmt->close();
 $conn->close();
-
-header('Content-Type: application/json');
-echo json_encode($response);
 ?>

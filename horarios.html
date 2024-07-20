@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Horarios</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.5.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="css/estilo.css">
+    <style>
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            background-color: #f8f9fa;
+            box-shadow: 0 -1px 6px rgba(0, 0, 0, 0.1);
+        }
+        .bottom-nav a {
+            padding: 10px 15px;
+            flex-grow: 1;
+            text-align: center;
+            text-decoration: none;
+            color: #495057;
+        }
+        .bottom-nav a:hover {
+            background-color: #e9ecef;
+        }
+        .bottom-nav a.active {
+            color: #007bff;
+        }
+        .dark-mode .card-custom {
+            background-color: #333;
+            color: #fff;
+        }
+        .dark-mode .btn-custom {
+            background-color: #0056b3;
+            color: #fff;
+        }
+        .dark-mode .bottom-nav {
+            background-color: #333;
+        }
+        .dark-mode .bottom-nav a {
+            color: #ccc;
+        }
+    </style>
+</head>
+<body>
+    <!-- Contenedor del menú superior -->
+    <div class="container-fluid bg-light p-3 d-flex justify-content-between align-items-center">
+        <h1 class="h3 mb-0">Nombre del Salón - Horarios</h1>
+        <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasMenu" aria-controls="offcanvasMenu">
+            ☰
+        </button>
+    </div>
+
+    <!-- Contenedor para cargar el menú offcanvas -->
+    <div id="menuContainer"></div>
+
+    <div class="container mt-5 mb-5">
+        <h1>Horarios</h1>
+        <p>Gestión de horarios de atención diaria del salón de belleza.</p>
+
+        <!-- Botón para agregar horario -->
+        <div class="mb-3">
+            <button class="btn btn-success" onclick="$('#modalAgregarHorario').modal('show')">Agregar Horario</button>
+        </div>
+
+        <!-- Lista de horarios -->
+        <div id="listaHorarios" class="list-group"></div>
+    </div>
+
+    <!-- Modal para agregar horario -->
+    <div class="modal fade" id="modalAgregarHorario" tabindex="-1" aria-labelledby="modalAgregarHorarioLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalAgregarHorarioLabel">Agregar Horario</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="formAgregarHorario">
+                        <div class="mb-3">
+                            <label for="dia" class="form-label">Día</label>
+                            <select class="form-control" id="dia" name="dia" required>
+                                <option value="Lunes">Lunes</option>
+                                <option value="Martes">Martes</option>
+                                <option value="Miércoles">Miércoles</option>
+                                <option value="Jueves">Jueves</option>
+                                <option value="Viernes">Viernes</option>
+                                <option value="Sábado">Sábado</option>
+                                <option value="Domingo">Domingo</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="hora_inicio" class="form-label">Hora Inicio</label>
+                            <input type="time" class="form-control" id="hora_inicio" name="hora_inicio" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="hora_fin" class="form-label">Hora Fin</label>
+                            <input type="time" class="form-control" id="hora_fin" name="hora_fin" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Guardar Horario</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para editar horario -->
+    <div class="modal fade" id="modalEditarHorario" tabindex="-1" aria-labelledby="modalEditarHorarioLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalEditarHorarioLabel">Editar Horario</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="formEditarHorario">
+                        <input type="hidden" id="editarHorarioId" name="id">
+                        <div class="mb-3">
+                            <label for="editarDia" class="form-label">Día</label>
+                            <select class="form-control" id="editarDia" name="dia" required>
+                                <option value="Lunes">Lunes</option>
+                                <option value="Martes">Martes</option>
+                                <option value="Miércoles">Miércoles</option>
+                                <option value="Jueves">Jueves</option>
+                                <option value="Viernes">Viernes</option>
+                                <option value="Sábado">Sábado</option>
+                                <option value="Domingo">Domingo</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="editarHoraInicio" class="form-label">Hora Inicio</label>
+                            <input type="time" class="form-control" id="editarHoraInicio" name="hora_inicio" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="editarHoraFin" class="form-label">Hora Fin</label>
+                            <input type="time" class="form-control" id="editarHoraFin" name="hora_fin" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Barra de navegación inferior -->
+    <div class="bottom-nav d-flex">
+        <a href="servicios.html" class="active"><i class="bi bi-scissors"></i><br>Servicios</a>
+        <a href="personal.html"><i class="bi bi-people"></i><br>Personal</a>
+        <a href="horarios.html"><i class="bi bi-clock"></i><br>Horarios</a>
+        <a href="mi_tienda.html"><i class="bi bi-shop"></i><br>Mi Tienda</a>
+    </div>
+
+    <!-- Incluyendo jQuery y Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/horarios.js"></script>
+    <script>
+        // Cargar el menú offcanvas y la barra de navegación desde archivos HTML externos
+        fetch('menu.html')
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById('menuContainer').innerHTML = data;
+
+                // Ejecutar el código relacionado con el modo oscuro después de cargar el menú
+                const darkModeSwitch = document.getElementById('darkModeSwitch');
+                const currentTheme = localStorage.getItem('theme');
+
+                if (currentTheme === 'dark') {
+                    document.body.classList.add('dark-mode');
+                    darkModeSwitch.checked = true;
+                }
+
+                darkModeSwitch.addEventListener('change', function () {
+                    if (this.checked) {
+                        document.body.classList.add('dark-mode');
+                        localStorage.setItem('theme', 'dark');
+                    } else {
+                        document.body.classList.remove('dark-mode');
+                        localStorage.setItem('theme', 'light');
+                    }
+                });
+            });
+    </script>
+</body>
+</html>

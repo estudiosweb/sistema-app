@@ -1,30 +1,28 @@
 <?php
 include 'conectar.php';
 
-$response = array();
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
 
-try {
-    if (isset($_GET['id'])) {
-        $id = intval($_GET['id']);
-        $sql = "SELECT * FROM clientes WHERE id = $id";
-        $result = $conn->query($sql);
-        
-        if ($result->num_rows > 0) {
-            $response['status'] = 'success';
-            $response['cliente'] = $result->fetch_assoc();
-        } else {
-            throw new Exception("Cliente no encontrado.");
-        }
+$id = $_GET['id'];
+
+$sql = "SELECT * FROM clientes WHERE id = ?";
+$stmt = $conn->prepare($sql);
+$stmt->bind_param('i', $id);
+
+if ($stmt->execute()) {
+    $result = $stmt->get_result();
+    if ($result->num_rows > 0) {
+        $cliente = $result->fetch_assoc();
+        echo json_encode(['status' => 'success', 'cliente' => $cliente]);
     } else {
-        throw new Exception("ID de cliente no especificado.");
+        echo json_encode(['status' => 'error', 'message' => 'Cliente no encontrado']);
     }
-} catch (Exception $e) {
-    $response['status'] = 'error';
-    $response['message'] = $e->getMessage();
+} else {
+    echo json_encode(['status' => 'error', 'message' => 'Error al obtener el cliente']);
 }
 
+$stmt->close();
 $conn->close();
-
-header('Content-Type: application/json');
-echo json_encode($response);
 ?>

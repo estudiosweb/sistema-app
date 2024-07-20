@@ -4,19 +4,32 @@ include 'conectar.php';
 $response = array();
 
 try {
-    $sql = "SELECT * FROM horarios";
-    $result = $conn->query($sql);
-    
-    if ($result->num_rows > 0) {
-        $horarios = array();
-        while($row = $result->fetch_assoc()) {
-            $horarios[] = $row;
+    if (isset($_GET['id'])) {
+        $id = intval($_GET['id']);
+        $sql = "SELECT * FROM horarios WHERE id='$id'";
+        $result = $conn->query($sql);
+
+        if ($result->num_rows > 0) {
+            $response['status'] = 'success';
+            $response['horario'] = $result->fetch_assoc();
+        } else {
+            $response['status'] = 'error';
+            $response['message'] = 'Horario no encontrado';
         }
-        $response['status'] = 'success';
-        $response['horarios'] = $horarios;
     } else {
-        $response['status'] = 'success';
-        $response['horarios'] = [];
+        $sql = "SELECT * FROM horarios";
+        $result = $conn->query($sql);
+
+        if ($result->num_rows > 0) {
+            $response['status'] = 'success';
+            $response['horarios'] = array();
+            while($row = $result->fetch_assoc()) {
+                $response['horarios'][] = $row;
+            }
+        } else {
+            $response['status'] = 'error';
+            $response['message'] = 'No se encontraron horarios';
+        }
     }
 } catch (Exception $e) {
     $response['status'] = 'error';

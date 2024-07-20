@@ -5,9 +5,8 @@
     </div>
     <div class="offcanvas-body">
         <div class="text-center mb-3">
-            <img src="path/to/your/image.jpg" alt="Profile Image" class="rounded-circle" width="100">
-            <h6 class="mt-2">Karla Black</h6>
-            <p class="text-muted">Front End Designer</p>
+            <img src="images/fav_.png" alt="Profile Image" class="rounded-circle" width="100">
+            <h6 id="nombreNegocioActual" class="mt-2">Nombre del Salón</h6>
         </div>
         <div class="list-group">
             <a href="index.html" class="list-group-item list-group-item-action">Homepage</a>
@@ -32,3 +31,41 @@
         </div>
     </div>
 </div>
+<script>
+    fetch('php/ver_nombre_tienda.php')
+        .then(response => response.json())
+        .then(data => {
+            document.getElementById('nombreNegocioActual').textContent = data.nombre_negocio;
+        })
+        .catch(error => console.error('Error:', error));
+</script>
+
+<style>
+    .offcanvas-header, .offcanvas-body {
+        background-color: #f8f9fa;
+    }
+    .offcanvas-body .text-center img {
+        border: 2px solid #dee2e6;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    }
+    .offcanvas-body .text-center h6 {
+        margin-top: 10px;
+        font-size: 1.25rem;
+        font-weight: 500;
+    }
+    .list-group-item {
+        border: none;
+        border-radius: 0.25rem;
+        transition: background-color 0.3s;
+    }
+    .list-group-item:hover {
+        background-color: #e9ecef;
+    }
+    .form-check-input:checked {
+        background-color: #0d6efd;
+        border-color: #0d6efd;
+    }
+    .form-check-input:focus {
+        box-shadow: none;
+    }
+</style>

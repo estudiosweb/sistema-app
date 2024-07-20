@@ -1,32 +1,57 @@
 <?php
 include 'conectar.php';
-include 'utilidades.php';
 
-$nombre = sanitizeInput($_POST['nombre']);
-$telefono = sanitizeInput($_POST['telefono']);
-$email = sanitizeInput($_POST['email']);
-$direccion = sanitizeInput($_POST['direccion']);
-$fecha_nacimiento = sanitizeInput($_POST['fecha_nacimiento']);
-$sexo = sanitizeInput($_POST['sexo']);
-$servicio_preferido = sanitizeInput($_POST['servicio_preferido']);
-$notas = sanitizeInput($_POST['notas']);
-
-$response = array();
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
 
 try {
-    $sql = "INSERT INTO clientes (nombre, telefono, email, direccion, fecha_nacimiento, sexo, servicio_preferido, notas) VALUES ('$nombre', '$telefono', '$email', '$direccion', '$fecha_nacimiento', '$sexo', '$servicio_preferido', '$notas')";
-    if ($conn->query($sql) === TRUE) {
-        $response['status'] = 'success';
-    } else {
-        throw new Exception("Error: " . $sql . "<br>" . $conn->error);
+    if (empty($_POST['nombre']) || empty($_POST['rut']) || empty($_POST['telefono'])) {
+        echo json_encode(['status' => 'error', 'message' => 'Los campos Nombre, RUT y Teléfono son obligatorios']);
+        exit();
     }
+
+    $nombre = $_POST['nombre'];
+    $rut = $_POST['rut'];
+    $telefono = $_POST['telefono'];
+    $email = $_POST['email'];
+    $fecha_nacimiento = $_POST['fecha_nacimiento'];
+    $sexo = $_POST['sexo'];
+    $servicio_preferido = $_POST['servicio_preferido'];
+    $notas = $_POST['notas'];
+    $direccion = $_POST['direccion'];
+
+    // Verificar si el RUT ya está registrado
+    $sql = "SELECT * FROM clientes WHERE rut = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param('s', $rut);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    if ($result->num_rows > 0) {
+        echo json_encode(['status' => 'error', 'message' => 'RUT ya registrado']);
+        $stmt->close();
+        $conn->close();
+        exit();
+    }
+
+    $stmt->close();
+
+    $sql = "INSERT INTO clientes (nombre, rut, telefono, email, fecha_nacimiento, sexo, servicio_preferido, notas, direccion) 
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param('sssssssss', $nombre, $rut, $telefono, $email, $fecha_nacimiento, $sexo, $servicio_preferido, $notas, $direccion);
+
+    if ($stmt->execute()) {
+        echo json_encode(['status' => 'success']);
+    } else {
+        echo json_encode(['status' => 'error', 'message' => 'Error al crear el cliente']);
+    }
+
+    $stmt->close();
+    $conn->close();
 } catch (Exception $e) {
-    $response['status'] = 'error';
-    $response['message'] = $e->getMessage();
+    echo json_encode(['status' => 'error', 'message' => $e->getMessage()]);
 }
-
-$conn->close();
-
-header('Content-Type: application/json');
-echo json_encode($response);
 ?>

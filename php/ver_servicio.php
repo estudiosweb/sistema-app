@@ -7,7 +7,7 @@ try {
     $id = intval($_GET['id']);
     $sql = "SELECT servicios.*, categorias.nombre as categoria_nombre 
             FROM servicios 
-            JOIN categorias ON servicios.categoria_id = categorias.id
+            JOIN categorias ON servicios.categoria = categorias.id
             WHERE servicios.id='$id'";
 
     $result = $conn->query($sql);

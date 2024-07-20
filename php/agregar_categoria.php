@@ -1,26 +1,15 @@
 <?php
 include 'conectar.php';
-include 'utilidades.php';
 
-$data = json_decode(file_get_contents('php://input'), true);
-$nombre = sanitizeInput($data['nombre']);
-$response = array();
+$nombreCategoria = $_POST['nombreCategoria'];
 
-try {
-    $sql = "INSERT INTO categorias (nombre) VALUES ('$nombre')";
-    if ($conn->query($sql) === TRUE) {
-        $response['status'] = 'success';
-        $response['message'] = 'Categoría agregada exitosamente';
-    } else {
-        throw new Exception("Error: " . $sql . "<br>" . $conn->error);
-    }
-} catch (Exception $e) {
-    $response['status'] = 'error';
-    $response['message'] = $e->getMessage();
+$sql = "INSERT INTO categorias (nombre) VALUES ('$nombreCategoria')";
+
+if (mysqli_query($conn, $sql)) {
+    echo json_encode(['status' => 'success']);
+} else {
+    echo json_encode(['status' => 'error', 'message' => 'Error al guardar la categoría']);
 }
 
-$conn->close();
-
-header('Content-Type: application/json');
-echo json_encode($response);
+mysqli_close($conn);
 ?>

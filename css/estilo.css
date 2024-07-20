@@ -4,52 +4,9 @@ body {
     color: #000000;
 }
 
-.offcanvas-header, .offcanvas-body, .list-group-item {
+.offcanvas-header, .offcanvas-body, .list-group-item, .navbar, .navbar .btn, .container-fluid.bg-light.p-3.d-flex.justify-content-between.align-items-center {
     background-color: #ffffff;
     color: #000000;
-}
-
-.navbar, .navbar .btn {
-    background-color: #ffffff;
-    color: #000000;
-}
-
-/* Estilos para el modo oscuro */
-body.dark-mode {
-    background-color: #121212;
-    color: #ffffff;
-}
-
-body.dark-mode .offcanvas-header, 
-body.dark-mode .offcanvas-body, 
-body.dark-mode .list-group-item {
-    background-color: #121212;
-    color: #ffffff;
-}
-
-body.dark-mode .list-group-item-action:hover {
-    background-color: #2c2c2c;
-}
-
-body.dark-mode .navbar, 
-body.dark-mode .navbar .btn {
-    background-color: #121212;
-    color: #ffffff;
-}
-
-body.dark-mode .navbar .btn i {
-    color: #ffffff;
-}
-
-/* Estilos para el contenedor del menú superior */
-.container-fluid.bg-light.p-3.d-flex.justify-content-between.align-items-center {
-    background-color: #ffffff;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-}
-
-body.dark-mode .container-fluid.bg-light.p-3.d-flex.justify-content-between.align-items-center {
-    background-color: #121212;
-    color: #ffffff;
 }
 
 .navbar .btn {
@@ -63,4 +20,169 @@ body.dark-mode .container-fluid.bg-light.p-3.d-flex.justify-content-between.alig
 .navbar .btn i {
     font-size: 1.5rem;
     margin-bottom: 0.2rem;
+}
+
+/* Estilos para el modo oscuro */
+body.dark-mode {
+    background-color: #121212;
+    color: #ffffff;
+}
+
+body.dark-mode .offcanvas-header, 
+body.dark-mode .offcanvas-body, 
+body.dark-mode .list-group-item, 
+body.dark-mode .navbar, 
+body.dark-mode .navbar .btn, 
+body.dark-mode .container-fluid.bg-light.p-3.d-flex.justify-content-between.align-items-center {
+    background-color: #121212;
+    color: #ffffff;
+}
+
+body.dark-mode .list-group-item-action:hover {
+    background-color: #2c2c2c;
+}
+
+body.dark-mode .navbar .btn i {
+    color: #ffffff;
+}
+
+body.dark-mode .form-control, 
+body.dark-mode .form-select, 
+body.dark-mode .btn, 
+body.dark-mode .modal-content, 
+body.dark-mode .dropdown-menu {
+    background-color: #1f1f1f;
+    color: #ffffff;
+    border-color: #333333;
+}
+
+body.dark-mode .form-control::placeholder,
+body.dark-mode .form-select::placeholder {
+    color: #bbbbbb;
+}
+
+body.dark-mode .form-control:focus,
+body.dark-mode .form-select:focus {
+    background-color: #333333;
+    color: #ffffff;
+    border-color: #555555;
+}
+
+body.dark-mode .dropdown-item {
+    color: white;
+}
+
+body.dark-mode .dropdown-item:hover {
+    background-color: #495057;
+}
+
+body.dark-mode .list-group-item {
+    border-color: #444;
+}
+
+body.dark-mode .offcanvas {
+    background-color: #121212;
+    color: #ffffff;
+}
+
+body.dark-mode .navbar-light {
+    background-color: #121212;
+    color: #ffffff;
+}
+
+/* Asegurarse de que los elementos de la lista sean visibles */
+.list-group-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+/* Asegurarse de que los elementos ocultos por el filtrado se oculten correctamente */
+.list-group-item.hidden {
+    display: none !important;
+}
+
+/* Estilo para el botón de dropdown sin fondo */
+.btn-link.dropdown-toggle {
+    background: none;
+    border: none;
+    padding: 0;
+}
+
+.bi-three-dots-vertical {
+    font-size: 1.2em;
+}
+
+/* Estilos adicionales para offcanvas y navbar en modo oscuro */
+.dark-mode .modal-content {
+    background-color: #343a40;
+    color: white;
+}
+
+.dark-mode .dropdown-menu {
+    background-color: #343a40;
+    color: white;
+}
+
+.dark-mode .dropdown-item {
+    color: white;
+}
+
+.dark-mode .dropdown-item:hover {
+    background-color: #495057;
+}
+
+/* Menú de configuración */
+.menu-button {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    height: 150px;
+    border-radius: 15px;
+    margin: 10px;
+}
+
+.menu-button i {
+    font-size: 2em;
+    margin-bottom: 10px;
+}
+
+.menu-button span {
+    font-size: 1.2em;
+}
+
+/* Estilo para el botón de dropdown sin fondo */
+.btn-link.dropdown-toggle {
+    background: none;
+    border: none;
+    padding: 0;
+}
+
+/* Estilo para el ícono de menú */
+.bi-three-dots-vertical {
+    font-size: 1.2em;
+}
+
+/* Menú de configuración */
+.menu-button {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    height: 150px;
+    border-radius: 15px;
+    margin: 10px;
+}
+
+.menu-button i {
+    font-size: 2em;
+    margin-bottom: 10px;
+}
+
+.menu-button span {
+    font-size: 1.2em;
 }
