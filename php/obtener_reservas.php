@@ -3,9 +3,26 @@ include 'conectar.php';
 
 $busqueda = $_GET['busqueda'] ?? '';
 
-$sql = "SELECT * FROM reservas";
+$sql = "SELECT 
+            reservas.id, 
+            reservas.fecha_reserva, 
+            reservas.hora_reserva, 
+            reservas.comentario, 
+            clientes.nombre AS cliente_nombre, 
+            servicios.nombre AS servicio_nombre, 
+            personal.nombre AS personal_nombre, 
+            servicios.duracion 
+        FROM 
+            reservas
+        JOIN 
+            clientes ON reservas.cliente_id = clientes.id
+        JOIN 
+            servicios ON reservas.servicio = servicios.id
+        JOIN 
+            personal ON reservas.personal_id = personal.id";
+
 if ($busqueda) {
-    $sql .= " WHERE nombre_cliente LIKE '%$busqueda%' OR servicio LIKE '%$busqueda%'";
+    $sql .= " WHERE clientes.nombre LIKE '%$busqueda%' OR servicios.nombre LIKE '%$busqueda%'";
 }
 
 $result = $conn->query($sql);
@@ -17,7 +34,7 @@ if ($result->num_rows > 0) {
     }
 }
 
-echo json_encode($reservas);
+echo json_encode(['status' => 'success', 'reservas' => $reservas]);
 
 $conn->close();
 ?>

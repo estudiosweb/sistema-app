@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar Usuario - Salón de Belleza</title>
+    <link rel="stylesheet" href="css/normalize.css">
+    <link rel="stylesheet" href="css/estilo.css">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.5.0/font/bootstrap-icons.min.css">
+    <style>
+        body {
+            background: linear-gradient(132deg, #ffffff, #cccccc, #999999, #666666);
+            background-size: 400% 400%;
+            animation: Gradient 15s ease infinite;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        @keyframes Gradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        h1 {
+            color: #000000;
+            font-family: 'Open Sans';
+            font-weight: bold;
+            text-align: center;
+            margin-top: 20px;
+        }
+        .form-control {
+            border-radius: 50px;
+            padding-left: 45px;
+            padding-right: 45px;
+        }
+        .form-group {
+            position: relative;
+            margin-bottom: 20px;
+        }
+        .form-group .form-icon {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            left: 15px;
+            color: #555;
+        }
+        .btnlogeo {
+            border-radius: 50px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border: none;
+            padding-top: 8px;
+            padding-bottom: 8px;
+        }
+        footer {
+            text-align: center;
+            padding: 10px 0;
+            background-color: rgba(0, 0, 0, 0.2);
+            color: white;
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const username = urlParams.get('username');
+            
+            fetch(`php/get_user.php?username=${username}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        document.getElementById('username').value = data.user.username;
+                        document.getElementById('role').value = data.user.role;
+                    } else {
+                        alert(data.message);
+                        window.location.href = 'usuarios.html';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    window.location.href = 'usuarios.html';
+                });
+            
+            document.getElementById('editUserForm').addEventListener('submit', function(event) {
+                event.preventDefault();
+                const formData = new FormData(document.getElementById('editUserForm'));
+                fetch('php/update_user.php', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        alert(data.message);
+                        window.location.href = 'tusuarios.html';
+                    } else {
+                        alert(data.message);
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+            });
+        });
+    </script>
+    <div class="container">
+        <h1 class="text-center mt-5">Editar Usuario</h1>
+        <div class="row justify-content-center mt-3">
+            <div class="col-md-6">
+                <form id="editUserForm">
+                    <div class="form-group">
+                        <i class="bi bi-person form-icon"></i>
+                        <label for="username" class="sr-only">Nombre de usuario:</label>
+                        <input type="text" class="form-control" id="username" name="username" placeholder="Nombre de usuario" required readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="role" class="sr-only">Rol:</label>
+                        <select class="form-control" id="role" name="role">
+                            <option value="user">Usuario</option>
+                            <option value="admin">Administrador</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btnlogeo btn-block">Guardar cambios</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <footer>
+        &copy; <?php echo date("Y"); ?> Salón de Belleza. Todos los derechos reservados.
+    </footer>
+</body>
+</html>

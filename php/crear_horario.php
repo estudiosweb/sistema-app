@@ -5,10 +5,20 @@ $response = array();
 
 try {
     $dia = $_POST['dia'];
-    $hora_inicio = $_POST['hora_inicio'];
-    $hora_fin = $_POST['hora_fin'];
+    $tipo_jornada = $_POST['tipo_jornada'];
 
-    $sql = "INSERT INTO horarios (dia, hora_inicio, hora_fin) VALUES ('$dia', '$hora_inicio', '$hora_fin')";
+    if ($tipo_jornada == 'continuo') {
+        $hora_inicio = $_POST['hora_inicio'];
+        $hora_fin = $_POST['hora_fin'];
+        $sql = "INSERT INTO horarios (dia, tipo_jornada, hora_inicio, hora_fin) VALUES ('$dia', '$tipo_jornada', '$hora_inicio', '$hora_fin')";
+    } else {
+        $hora_inicio_m = $_POST['hora_inicio_m'];
+        $hora_fin_m = $_POST['hora_fin_m'];
+        $hora_inicio_t = $_POST['hora_inicio_t'];
+        $hora_fin_t = $_POST['hora_fin_t'];
+        $sql = "INSERT INTO horarios (dia, tipo_jornada, hora_inicio_m, hora_fin_m, hora_inicio_t, hora_fin_t) VALUES ('$dia', '$tipo_jornada', '$hora_inicio_m', '$hora_fin_m', '$hora_inicio_t', '$hora_fin_t')";
+    }
+
     if ($conn->query($sql) === TRUE) {
         $response['status'] = 'success';
     } else {

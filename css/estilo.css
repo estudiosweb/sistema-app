@@ -1,188 +1,230 @@
-/* Estilos para el modo claro */
-body {
-    background-color: #ffffff;
-    color: #000000;
+/* Estilos generales */
+.offcanvas-custom-header {
+    background-color: #fff;
+    padding: 1rem;
+    margin-bottom: 1rem;
 }
 
-.offcanvas-header, .offcanvas-body, .list-group-item, .navbar, .navbar .btn, .container-fluid.bg-light.p-3.d-flex.justify-content-between.align-items-center {
-    background-color: #ffffff;
-    color: #000000;
+.offcanvas-custom-body {
+    background-color: #fff;
+    padding: 1rem 1.5rem;
 }
 
-.navbar .btn {
+/* Sección de perfil */
+.profile-section {
+    text-align: center;
+}
+
+.profile-section .profile-img {
+    border: 3px solid #dee2e6;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 80px;
+    height: 80px;
+}
+
+.profile-section h6 {
+    margin-top: 0.5rem;
+    font-size: 1.2rem;
+    font-weight: 500;
+}
+
+.navigation-section, .settings-section {
+    margin-bottom: 1rem;
+}
+
+.navigation-section h6, .settings-section h6 {
+    font-size: 0.9rem;
+    color: #888;
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+    font-weight: bold;
+}
+
+.custom-list-group {
+    margin-bottom: 1rem;
+}
+
+.custom-list-group-item {
     display: flex;
-    flex-direction: column;
     align-items: center;
-    font-size: 1rem;
-    padding: 0.5rem;
+    padding: 0.75rem 1rem;
+    border: none;
+    border-radius: 0.5rem;
+    transition: background-color 0.3s, transform 0.2s;
+    margin-bottom: 0.5rem;
+    background-color: #f1f3f5;
+    color: #333;
+    font-weight: 500;
+    text-decoration: none;
 }
 
-.navbar .btn i {
-    font-size: 1.5rem;
-    margin-bottom: 0.2rem;
+.custom-list-group-item i {
+    margin-right: 1rem;
+    font-size: 1.2rem;
+    color: #007bff;
 }
 
-/* Estilos para el modo oscuro */
-body.dark-mode {
-    background-color: #121212;
-    color: #ffffff;
+.custom-list-group-item:hover {
+    background-color: #007bff;
+    color: #fff;
+    transform: translateY(-2px);
 }
 
-body.dark-mode .offcanvas-header, 
-body.dark-mode .offcanvas-body, 
-body.dark-mode .list-group-item, 
-body.dark-mode .navbar, 
-body.dark-mode .navbar .btn, 
-body.dark-mode .container-fluid.bg-light.p-3.d-flex.justify-content-between.align-items-center {
-    background-color: #121212;
-    color: #ffffff;
+.form-check-input:checked {
+    background-color: #0d6efd;
+    border-color: #0d6efd;
 }
 
-body.dark-mode .list-group-item-action:hover {
-    background-color: #2c2c2c;
+.form-check-input:focus {
+    box-shadow: none;
 }
 
-body.dark-mode .navbar .btn i {
-    color: #ffffff;
+.large-switch .form-check-input {
+    width: 3rem;
+    height: 1.5rem;
+    transform: scale(1.5);
 }
 
-body.dark-mode .form-control, 
-body.dark-mode .form-select, 
-body.dark-mode .btn, 
-body.dark-mode .modal-content, 
-body.dark-mode .dropdown-menu {
-    background-color: #1f1f1f;
-    color: #ffffff;
-    border-color: #333333;
+.d-flex.justify-content-end {
+    justify-content: flex-end !important;
 }
 
-body.dark-mode .form-control::placeholder,
-body.dark-mode .form-select::placeholder {
-    color: #bbbbbb;
+/* Mejoras en la interfaz de usuario */
+.container-fluid.bg-light.p-3.d-flex {
+    margin-bottom: 20px;
 }
 
-body.dark-mode .form-control:focus,
-body.dark-mode .form-select:focus {
-    background-color: #333333;
-    color: #ffffff;
-    border-color: #555555;
+.card-custom {
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s;
+    padding: 20px;
 }
 
-body.dark-mode .dropdown-item {
-    color: white;
+.card-custom:hover {
+    transform: translateY(-10px);
 }
 
-body.dark-mode .dropdown-item:hover {
-    background-color: #495057;
+.btn-custom {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    transition: background-color 0.3s;
+    margin-top: 10px;
 }
 
-body.dark-mode .list-group-item {
-    border-color: #444;
+.btn-custom:hover {
+    background-color: #0056b3;
 }
 
-body.dark-mode .offcanvas {
-    background-color: #121212;
-    color: #ffffff;
+.bottom-nav {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    background-color: #f8f9fa;
+    box-shadow: 0 -1px 6px rgba(0, 0, 0, 0.1);
 }
 
-body.dark-mode .navbar-light {
-    background-color: #121212;
-    color: #ffffff;
+.bottom-nav a {
+    padding: 10px 15px;
+    flex-grow: 1;
+    text-align: center;
+    text-decoration: none;
+    color: #495057;
 }
 
-/* Asegurarse de que los elementos de la lista sean visibles */
+.bottom-nav a:hover {
+    background-color: #e9ecef;
+}
+
+.btnlogeo {
+    border-radius: 50px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border: none;
+    padding-top: 8px;
+    padding-bottom: 8px;
+}
+
+.bottom-nav a.active {
+    color: #007bff;
+}
+
 .list-group-item {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 10px;
+    border: none;
+    border-radius: 0.25rem;
+    transition: background-color 0.3s;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: box-shadow 0.3s ease-in-out;
 }
 
-/* Asegurarse de que los elementos ocultos por el filtrado se oculten correctamente */
+.list-group-item:hover {
+    background-color: #e9ecef;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
 .list-group-item.hidden {
     display: none !important;
 }
 
-/* Estilo para el botón de dropdown sin fondo */
-.btn-link.dropdown-toggle {
-    background: none;
-    border: none;
-    padding: 0;
+.profile-img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
 }
 
-.bi-three-dots-vertical {
-    font-size: 1.2em;
+/* Modo oscuro */
+body.dark-mode .offcanvas-custom-header, 
+body.dark-mode .offcanvas-custom-body {
+    background-color: #1e1e1e;
 }
 
-/* Estilos adicionales para offcanvas y navbar en modo oscuro */
-.dark-mode .modal-content {
-    background-color: #343a40;
-    color: white;
+body.dark-mode .profile-section h6,
+body.dark-mode .custom-list-group-item,
+body.dark-mode .settings-section h6 {
+    color: #ccc;
 }
 
-.dark-mode .dropdown-menu {
-    background-color: #343a40;
-    color: white;
+body.dark-mode .custom-list-group-item {
+    background-color: #2a2a2a;
 }
 
-.dark-mode .dropdown-item {
-    color: white;
+body.dark-mode .custom-list-group-item:hover {
+    background-color: #007bff;
+    color: #fff;
 }
 
-.dark-mode .dropdown-item:hover {
-    background-color: #495057;
+body.dark-mode .form-control {
+    background-color: #333;
+    color: #fff;
 }
 
-/* Menú de configuración */
-.menu-button {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    height: 150px;
-    border-radius: 15px;
-    margin: 10px;
+body.dark-mode .form-control::placeholder {
+    color: #bbb;
 }
 
-.menu-button i {
-    font-size: 2em;
-    margin-bottom: 10px;
+body.dark-mode .btn-custom {
+    background-color: #0056b3;
+    color: #fff;
 }
 
-.menu-button span {
-    font-size: 1.2em;
+body.dark-mode .btn-close {
+    filter: invert(1);
 }
 
-/* Estilo para el botón de dropdown sin fondo */
-.btn-link.dropdown-toggle {
-    background: none;
-    border: none;
-    padding: 0;
+body.dark-mode .modal-content {
+    background-color: #1e1e1e;
+    color: #fff;
 }
 
-/* Estilo para el ícono de menú */
-.bi-three-dots-vertical {
-    font-size: 1.2em;
+body.dark-mode .bottom-nav {
+    background-color: #333;
 }
 
-/* Menú de configuración */
-.menu-button {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    height: 150px;
-    border-radius: 15px;
-    margin: 10px;
-}
-
-.menu-button i {
-    font-size: 2em;
-    margin-bottom: 10px;
-}
-
-.menu-button span {
-    font-size: 1.2em;
+body.dark-mode .bottom-nav a {
+    color: #ccc;
 }

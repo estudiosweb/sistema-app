@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Administrar Usuarios - Salón de Belleza</title>
+    <link rel="stylesheet" href="css/normalize.css">
+    <link rel="stylesheet" href="css/estilo.css">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.5.0/font/bootstrap-icons.min.css">
+    <style>
+        body {
+            background: linear-gradient(132deg, #ffffff, #d1b47d, #5f97bd, #666666);
+            background-size: 400% 400%;
+            animation: Gradient 15s ease infinite;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        @keyframes Gradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        h1 {
+            color: #333333;
+            font-family: 'Open Sans';
+            font-weight: bold;
+            text-align: center;
+            margin-top: 20px;
+        }
+        .container {
+            width: 100%;
+            padding: 0 15px;
+            position: relative;
+        }
+        .table-container {
+            width: 100%;
+            margin-top: 20px;
+            overflow-x: auto;
+        }
+        .table {
+            width: 100%;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .table th, .table td {
+            text-align: center;
+            vertical-align: middle;
+        }
+        .btnlogeo {
+            border-radius: 50px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border: none;
+            padding-top: 8px;
+            padding-bottom: 8px;
+        }
+        .btnlogeo-edit, .btnlogeo-delete {
+            border: none;
+            background: none;
+            cursor: pointer;
+        }
+        .btnlogeo-edit i, .btnlogeo-delete i {
+            font-size: 1.2rem;
+        }
+        .logout-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+        }
+        .logout-btn a {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            color: #000;
+            font-size: 14px;
+        }
+        .logout-btn i {
+            margin-right: 5px;
+            font-size: 18px;
+        }
+        footer {
+            text-align: center;
+            padding: 10px 0;
+            background-color: rgba(0, 0, 0, 0.2);
+            color: white;
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+        }
+        .add-user-btn {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <script>
+        // Verificar sesión y rol de administrador
+        fetch('php/verificar_sesion.php')
+            .then(response => response.json())
+            .then(data => {
+                if (data.status !== 'success' || data.role !== 'admin') {
+                    window.location.href = 'login.html';
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                window.location.href = 'login.html';
+            });
+    </script>
+    <div class="container">
+        <div class="logout-btn">
+            <a href="php/logout.php">
+                <i class="bi bi-box-arrow-right"></i>
+                <span>Cerrar Sesión</span>
+            </a>
+        </div>
+        <h1 class="text-center mt-5">Administrar Usuarios</h1>
+        <div class="table-container">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Nombre de usuario</th>
+                        <th>Rol</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody id="userTableBody">
+                    <!-- Los usuarios se cargarán aquí -->
+                </tbody>
+            </table>
+            <div class="add-user-btn">
+                <button class="btnlogeo btn-block" data-toggle="modal" data-target="#addUserModal">Agregar Usuario</button>
+            </div>
+        </div>
+    </div>
+    <footer>
+        &copy; <?php echo date("Y"); ?> Salón de Belleza. Todos los derechos reservados.
+    </footer>
+
+    <!-- Modal para agregar usuario -->
+    <div class="modal fade" id="addUserModal" tabindex="-1" aria-labelledby="addUserModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addUserModalLabel">Agregar Usuario</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="registerForm">
+                        <div class="form-group">
+                            <i class="bi bi-person form-icon"></i>
+                            <label for="username" class="sr-only">Nombre de usuario:</label>
+                            <input type="text" class="form-control" id="username" name="username" placeholder="Nombre de usuario" required>
+                        </div>
+                        <div class="form-group">
+                            <i class="bi bi-lock form-icon"></i>
+                            <label for="password" class="sr-only">Contraseña:</label>
+                            <input type="password" class="form-control" id="password" name="password" placeholder="Contraseña" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="role" class="sr-only">Rol:</label>
+                            <select class="form-control" id="role" name="role">
+                                <option value="user">Usuario</option>
+                                <option value="admin">Administrador</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btnlogeo btn-block">Registrar</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para editar usuario -->
+    <div class="modal fade" id="editUserModal" tabindex="-1" aria-labelledby="editUserModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editUserModalLabel">Editar Usuario</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="editUserForm">
+                        <div class="form-group">
+                            <i class="bi bi-person form-icon"></i>
+                            <label for="edit-username" class="sr-only">Nombre de usuario:</label>
+                            <input type="text" class="form-control" id="edit-username" name="username" placeholder="Nombre de usuario" required readonly>
+                        </div>
+                        <div class="form-group">
+                            <label for="edit-password" class="sr-only">Nueva Contraseña:</label>
+                            <input type="password" class="form-control" id="edit-password" name="password" placeholder="Nueva Contraseña">
+                        </div>
+                        <div class="form-group">
+                            <label for="edit-role" class="sr-only">Rol:</label>
+                            <select class="form-control" id="edit-role" name="role">
+                                <option value="user">Usuario</option>
+                                <option value="admin">Administrador</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btnlogeo btn-block">Guardar cambios</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            fetch('php/get_users.php')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        const userTableBody = document.getElementById('userTableBody');
+                        data.users.forEach(user => {
+                            const row = document.createElement('tr');
+                            row.innerHTML = `
+                                <td>${user.username}</td>
+                                <td>${user.role}</td>
+                                <td>
+                                    <button class="btnlogeo-edit" onclick="editUser('${user.username}')" data-toggle="modal" data-target="#editUserModal"><i class="bi bi-pencil-square"></i></button>
+                                    <button class="btnlogeo-delete" onclick="deleteUser('${user.username}')"><i class="bi bi-trash"></i></button>
+                                </td>
+                            `;
+                            userTableBody.appendChild(row);
+                        });
+                    } else {
+                        console.error(data.message);
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+        });
+
+        function editUser(username) {
+            fetch(`php/get_user.php?username=${username}`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Error en la respuesta de la red.');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.status === 'success') {
+                        document.getElementById('edit-username').value = data.user.username;
+                        document.getElementById('edit-role').value = data.user.role;
+                        $('#editUserModal').modal('show');
+                    } else {
+                        alert(data.message);
+                    }
+                })
+                .catch(error => console.error('Error en fetch:', error));
+        }
+
+        function deleteUser(username) {
+            if (confirm('¿Estás seguro de que quieres eliminar este usuario?')) {
+                fetch(`php/delete_user.php?username=${username}`, {
+                    method: 'DELETE'
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        alert(data.message);
+                        location.reload();
+                    } else {
+                        alert(data.message);
+                    }
+                })
+                .catch(error => console.error('Error en fetch:', error));
+            }
+        }
+
+        document.getElementById('registerForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const formData = new FormData(document.getElementById('registerForm'));
+            fetch('php/registrar.php', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => {
+                if (!response.ok) {
+                    return response.text().then(text => { throw new Error(text) });
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.status === 'success') {
+                    alert(data.message);
+                    location.reload();
+                } else {
+                    alert(data.message);
+                    console.error(data);
+                }
+            })
+            .catch(error => console.error('Error en fetch:', error));
+        });
+
+        document.getElementById('editUserForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const formData = new FormData(document.getElementById('editUserForm'));
+            fetch('php/update_user.php', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => {
+                if (!response.ok) {
+                    return response.text().then(text => { throw new Error(text) });
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.status === 'success') {
+                    alert(data.message);
+                    location.reload();
+                } else {
+                    alert(data.message);
+                    console.error(data);
+                }
+            })
+            .catch(error => console.error('Error en fetch:', error));
+        });
+    </script>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

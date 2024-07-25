@@ -4,8 +4,20 @@ include 'conectar.php';
 $response = array();
 
 try {
-    $sql = "SELECT * FROM servicios";
-    $result = $conn->query($sql);
+    $term = isset($_GET['q']) ? $_GET['q'] : '';
+
+    if ($term !== '') {
+        $sql = "SELECT id, nombre FROM servicios WHERE nombre LIKE ? LIMIT 10";
+        $stmt = $conn->prepare($sql);
+        $term = '%' . $term . '%';
+        $stmt->bind_param('s', $term);
+    } else {
+        $sql = "SELECT id, nombre, categoria, duracion, precio, descripcion, imagen FROM servicios";
+        $stmt = $conn->prepare($sql);
+    }
+
+    $stmt->execute();
+    $result = $stmt->get_result();
 
     if (!$result) {
         throw new Exception("Error en la consulta SQL: " . $conn->error);
@@ -16,19 +28,14 @@ try {
         $servicios[] = $row;
     }
 
-    if (count($servicios) > 0) {
-        $response['status'] = 'success';
-        $response['servicios'] = $servicios;
-    } else {
-        $response['status'] = 'error';
-        $response['message'] = 'No se encontraron servicios';
-    }
+    $response['status'] = 'success';
+    $response['servicios'] = $servicios;
 } catch (Exception $e) {
     $response['status'] = 'error';
     $response['message'] = $e->getMessage();
 }
 
-$conn->close();
 header('Content-Type: application/json');
 echo json_encode($response);
+$conn->close();
 ?>

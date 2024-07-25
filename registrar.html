@@ -3,64 +3,221 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registrar - Salón de Belleza</title>
+    <title>Ingreso de Cliente - Salón de Belleza</title>
     <link rel="stylesheet" href="css/normalize.css">
     <link rel="stylesheet" href="css/estilo.css">
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.5.0/font/bootstrap-icons.min.css">
+    <style>
+        body {
+            background: linear-gradient(132deg, #ffffff, #d1b47d, #5f97bd, #666666);
+            background-size: 400% 400%;
+            animation: Gradient 15s ease infinite;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        @keyframes Gradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        h1 {
+            color: #000000;
+            font-family: 'Open Sans';
+            font-weight: bold;
+            text-align: center;
+            margin-top: 20px;
+        }
+        .form-control {
+            border-radius: 50px;
+            padding-left: 15px; /* Ajustar padding */
+            padding-right: 15px; /* Ajustar padding */
+        }
+        .form-group {
+            position: relative;
+            margin-bottom: 20px;
+        }
+        .btnlogeo {
+            border-radius: 50px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border: none;
+            padding-top: 8px;
+            padding-bottom: 8px;
+            width: 100%;
+        }
+        .button-container {
+            display: flex;
+            justify-content: space-between;
+        }
+        .button-container .btn {
+            width: 48%;
+        }
+        .form-row {
+            display: flex;
+            justify-content: space-between;
+        }
+        .form-row .form-group {
+            flex: 1;
+        }
+        .form-row .form-group:not(:last-child) {
+            margin-right: 15px;
+        }
+        footer {
+            text-align: center;
+            padding: 10px 0;
+            background-color: rgba(0, 0, 0, 0.2);
+            color: white;
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+        }
+    </style>
 </head>
 <body>
     <div class="container">
-        <h1 class="text-center mt-5">Registrar</h1>
-        <div class="row justify-content-center mt-5">
+        <h1 class="text-center mt-5">Ingreso de Cliente</h1>
+        <div class="row justify-content-center mt-3">
             <div class="col-md-6">
-                <form id="registerForm">
+                <form id="loginForm">
                     <div class="form-group">
-                        <label for="username">Nombre de usuario:</label>
-                        <input type="text" class="form-control" id="username" name="username" required>
+                        <label for="username" class="sr-only">Nombre de usuario:</label>
+                        <input type="text" class="form-control" id="username" name="username" placeholder="Nombre de usuario" required>
                     </div>
                     <div class="form-group">
-                        <label for="password">Contraseña:</label>
-                        <input type="password" class="form-control" id="password" name="password" required>
+                        <label for="password" class="sr-only">Contraseña:</label>
+                        <input type="password" class="form-control" id="password" name="password" placeholder="Contraseña" required>
                     </div>
-                    <div class="form-group">
-                        <label for="role">Rol:</label>
-                        <select class="form-control" id="role" name="role">
-                            <option value="user">Usuario</option>
-                            <option value="admin">Administrador</option>
-                        </select>
+                    <div class="button-container">
+                        <button type="submit" class="btn btn-primary btnlogeo">Ingresar</button>
+                        <button type="button" class="btn btn-secondary btnlogeo" data-toggle="modal" data-target="#registerClientModal">Registrar Cliente</button>
                     </div>
-                    <button type="submit" class="btn btn-primary">Registrar</button>
                 </form>
             </div>
         </div>
     </div>
+    <footer>
+        &copy; <?php echo date("Y"); ?> Salón de Belleza. Todos los derechos reservados.
+    </footer>
+
+    <!-- Modal para registrar cliente -->
+    <div class="modal fade" id="registerClientModal" tabindex="-1" aria-labelledby="registerClientModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="registerClientModalLabel">Registrar Cliente</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="registerClientForm">
+                        <div class="form-group">
+                            <label for="nombre">Nombre:</label>
+                            <input type="text" class="form-control" id="nombre" name="nombre" placeholder="Nombre" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="rut">RUT:</label>
+                            <input type="text" class="form-control" id="rut" name="rut" placeholder="RUT" required>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="telefono">Teléfono:</label>
+                                <input type="text" class="form-control" id="telefono" name="telefono" placeholder="Teléfono" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="email">Email:</label>
+                                <input type="email" class="form-control" id="email" name="email" placeholder="Email">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="fecha_nacimiento">Fecha de Nacimiento:</label>
+                                <input type="date" class="form-control" id="fecha_nacimiento" name="fecha_nacimiento">
+                            </div>
+                            <div class="form-group">
+                                <label for="sexo">Sexo:</label>
+                                <select class="form-control" id="sexo" name="sexo">
+                                    <option value="M">Masculino</option>
+                                    <option value="F">Femenino</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="direccion">Dirección:</label>
+                            <input type="text" class="form-control" id="direccion" name="direccion" placeholder="Dirección">
+                        </div>
+                        <div class="form-group">
+                            <label for="notas">Notas:</label>
+                            <textarea class="form-control" id="notas" name="notas" placeholder="Notas"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="imagen_perfil">Imagen de Perfil:</label>
+                            <input type="file" class="form-control" id="imagen_perfil" name="imagen_perfil">
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-block btnlogeo">Registrar</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script>
-        document.getElementById('registerForm').addEventListener('submit', function(event) {
+        document.getElementById('loginForm').addEventListener('submit', function(event) {
             event.preventDefault();
-            const formData = new FormData(event.target);
-            fetch('php/registrar.php', {
+            const formData = new FormData(document.getElementById('loginForm'));
+            fetch('php/login.php', {
                 method: 'POST',
                 body: formData
             })
             .then(response => {
                 if (!response.ok) {
-                    throw new Error('Network response was not ok ' + response.statusText);
+                    return response.text().then(text => { throw new Error(text) });
                 }
                 return response.json();
             })
             .then(data => {
                 if (data.status === 'success') {
                     alert(data.message);
-                    window.location.href = 'login.html';
+                    window.location.href = 'index.html';
                 } else {
                     alert(data.message);
+                    console.error(data);
                 }
             })
-            .catch(error => {
-                console.error('There was a problem with the fetch operation:', error);
-                alert('Error: ' + error.message);
-            });
+            .catch(error => console.error('Error:', error));
+        });
+
+        document.getElementById('registerClientForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const formData = new FormData(document.getElementById('registerClientForm'));
+            fetch('php/crear_cliente.php', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => {
+                if (!response.ok) {
+                    return response.text().then(text => { throw new Error(text) });
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.status === 'success') {
+                    alert('Cliente registrado exitosamente');
+                    $('#registerClientModal').modal('hide');
+                } else {
+                    alert(data.message);
+                    console.error(data);
+                }
+            })
+            .catch(error => console.error('Error:', error));
         });
     </script>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>

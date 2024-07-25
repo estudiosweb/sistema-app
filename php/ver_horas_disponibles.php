@@ -4,31 +4,74 @@ include 'conectar.php';
 $response = array();
 
 try {
-    $fecha = $_GET['fecha'];
-    $sql = "SELECT hora_reserva FROM reservas WHERE fecha_reserva = '$fecha'";
-    $result = $conn->query($sql);
+    // Obtener parámetros de la solicitud
+    $fecha = filter_input(INPUT_GET, 'fecha', FILTER_SANITIZE_STRING);
+    $servicio_id = filter_input(INPUT_GET, 'servicio_id', FILTER_VALIDATE_INT);
 
-    if (!$result) {
-        throw new Exception("Error en la consulta SQL: " . $conn->error);
+    // Validar entradas
+    if (empty($fecha) || empty($servicio_id)) {
+        throw new Exception("Parámetros inválidos");
     }
 
-    $horas_ocupadas = array();
-    while ($row = $result->fetch_assoc()) {
-        $horas_ocupadas[] = $row['hora_reserva'];
+    // Obtener el nombre del día de la semana (en español)
+    $dias_es = array("Sunday" => "Domingo", "Monday" => "Lunes", "Tuesday" => "Martes", "Wednesday" => "Miércoles", "Thursday" => "Jueves", "Friday" => "Viernes", "Saturday" => "Sábado");
+    $dia_en = date('l', strtotime($fecha));
+    $dia = $dias_es[$dia_en] ?? null;
+
+    if (!$dia) {
+        throw new Exception("Día inválido");
     }
 
-    // Generar horas disponibles
-    $horas_disponibles = array();
-    $intervalos = array('08:00:00', '08:30:00', '09:00:00', '09:30:00', '10:00:00', '10:30:00', '11:00:00', '11:30:00', '12:00:00', '12:30:00', '13:00:00', '13:30:00', '14:00:00', '14:30:00', '15:00:00', '15:30:00', '16:00:00', '16:30:00', '17:00:00', '17:30:00', '18:00:00', '18:30:00', '19:00:00', '19:30:00');
+    // Obtener el horario del negocio para el día de la semana seleccionado
+    $stmt = $conn->prepare("SELECT * FROM horarios WHERE dia = ?");
+    $stmt->bind_param("s", $dia);
+    $stmt->execute();
+    $horario_query = $stmt->get_result();
+    
+    if ($horario_query->num_rows > 0) {
+        $horario = $horario_query->fetch_assoc();
+        $horas_disponibles = array();
 
-    foreach ($intervalos as $hora) {
-        if (!in_array($hora, $horas_ocupadas)) {
-            $horas_disponibles[] = $hora;
+        // Generar intervalos de tiempo según el horario del negocio
+        if ($horario['tipo_jornada'] == 'continuo') {
+            $hora_inicio = new DateTime($horario['hora_inicio']);
+            $hora_fin = new DateTime($horario['hora_fin']);
+            while ($hora_inicio < $hora_fin) {
+                $horas_disponibles[] = $hora_inicio->format('H:i');
+                $hora_inicio->modify('+1 hour'); // Suponiendo que cada reserva dura 1 hora
+            }
+        } else if ($horario['tipo_jornada'] == 'partido') {
+            $hora_inicio_m = new DateTime($horario['hora_inicio_m']);
+            $hora_fin_m = new DateTime($horario['hora_fin_m']);
+            while ($hora_inicio_m < $hora_fin_m) {
+                $horas_disponibles[] = $hora_inicio_m->format('H:i');
+                $hora_inicio_m->modify('+1 hour');
+            }
+            $hora_inicio_t = new DateTime($horario['hora_inicio_t']);
+            $hora_fin_t = new DateTime($horario['hora_fin_t']);
+            while ($hora_inicio_t < $hora_fin_t) {
+                $horas_disponibles[] = $hora_inicio_t->format('H:i');
+                $hora_inicio_t->modify('+1 hour');
+            }
         }
-    }
 
-    $response['status'] = 'success';
-    $response['horas'] = $horas_disponibles;
+        // Eliminar horas que ya están reservadas
+        $stmt_reservas = $conn->prepare("SELECT hora_reserva FROM reservas WHERE fecha_reserva = ?");
+        $stmt_reservas->bind_param("s", $fecha);
+        $stmt_reservas->execute();
+        $reservas_query = $stmt_reservas->get_result();
+        $reservas = array();
+        while ($row = $reservas_query->fetch_assoc()) {
+            $reservas[] = $row['hora_reserva'];
+        }
+        $horas_disponibles = array_diff($horas_disponibles, $reservas);
+
+        $response['status'] = 'success';
+        $response['horas'] = array_values($horas_disponibles);
+    } else {
+        $response['status'] = 'success';
+        $response['horas'] = [];
+    }
 } catch (Exception $e) {
     $response['status'] = 'error';
     $response['message'] = $e->getMessage();

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.5.0/font/bootstrap-icons.css">
     <link rel="stylesheet" href="css/estilo.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
     <style>
         .bottom-nav {
             position: fixed;
@@ -47,7 +48,7 @@
 <body>
     <!-- Contenedor del menú superior -->
     <div class="container-fluid bg-light p-3 d-flex justify-content-between align-items-center">
-        <h1 class="h3 mb-0">Nombre del Salón - Horarios</h1>
+        <h1 class="h3 mb-0" id="nombreNegocioActual">Mi Tienda</h1>
         <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasMenu" aria-controls="offcanvasMenu">
             ☰
         </button>
@@ -58,7 +59,7 @@
 
     <div class="container mt-5 mb-5">
         <h1>Horarios</h1>
-        <p>Gestión de horarios de atención diaria del salón de belleza.</p>
+        <p>Gestión de horarios de atención diaria del Salón.</p>
 
         <!-- Botón para agregar horario -->
         <div class="mb-3">
@@ -92,12 +93,39 @@
                             </select>
                         </div>
                         <div class="mb-3">
-                            <label for="hora_inicio" class="form-label">Hora Inicio</label>
-                            <input type="time" class="form-control" id="hora_inicio" name="hora_inicio" required>
+                            <label class="form-label">Tipo de Jornada</label>
+                            <select class="form-control" id="tipo_jornada" name="tipo_jornada" required onchange="toggleJornada(this.value)">
+                                <option value="continuo">Horario Continuo</option>
+                                <option value="partido">Jornada Mañana y Tarde</option>
+                            </select>
                         </div>
-                        <div class="mb-3">
-                            <label for="hora_fin" class="form-label">Hora Fin</label>
-                            <input type="time" class="form-control" id="hora_fin" name="hora_fin" required>
+                        <div id="jornadaContinuo" class="jornada-seccion">
+                            <div class="mb-3">
+                                <label for="hora_inicio" class="form-label">Hora Inicio</label>
+                                <input type="time" class="form-control" id="hora_inicio" name="hora_inicio">
+                            </div>
+                            <div class="mb-3">
+                                <label for="hora_fin" class="form-label">Hora Fin</label>
+                                <input type="time" class="form-control" id="hora_fin" name="hora_fin">
+                            </div>
+                        </div>
+                        <div id="jornadaPartido" class="jornada-seccion d-none">
+                            <div class="mb-3">
+                                <label for="hora_inicio_m" class="form-label">Hora Inicio Mañana</label>
+                                <input type="time" class="form-control" id="hora_inicio_m" name="hora_inicio_m">
+                            </div>
+                            <div class="mb-3">
+                                <label for="hora_fin_m" class="form-label">Hora Fin Mañana</label>
+                                <input type="time" class="form-control" id="hora_fin_m" name="hora_fin_m">
+                            </div>
+                            <div class="mb-3">
+                                <label for="hora_inicio_t" class="form-label">Hora Inicio Tarde</label>
+                                <input type="time" class="form-control" id="hora_inicio_t" name="hora_inicio_t">
+                            </div>
+                            <div class="mb-3">
+                                <label for="hora_fin_t" class="form-label">Hora Fin Tarde</label>
+                                <input type="time" class="form-control" id="hora_fin_t" name="hora_fin_t">
+                            </div>
                         </div>
                         <button type="submit" class="btn btn-primary">Guardar Horario</button>
                     </form>
@@ -130,12 +158,39 @@
                             </select>
                         </div>
                         <div class="mb-3">
-                            <label for="editarHoraInicio" class="form-label">Hora Inicio</label>
-                            <input type="time" class="form-control" id="editarHoraInicio" name="hora_inicio" required>
+                            <label class="form-label">Tipo de Jornada</label>
+                            <select class="form-control" id="editarTipoJornada" name="tipo_jornada" required onchange="toggleEditarJornada(this.value)">
+                                <option value="continuo">Horario Continuo</option>
+                                <option value="partido">Jornada Mañana y Tarde</option>
+                            </select>
                         </div>
-                        <div class="mb-3">
-                            <label for="editarHoraFin" class="form-label">Hora Fin</label>
-                            <input type="time" class="form-control" id="editarHoraFin" name="hora_fin" required>
+                        <div id="editarJornadaContinuo" class="jornada-seccion">
+                            <div class="mb-3">
+                                <label for="editarHoraInicio" class="form-label">Hora Inicio</label>
+                                <input type="time" class="form-control" id="editarHoraInicio" name="hora_inicio">
+                            </div>
+                            <div class="mb-3">
+                                <label for="editarHoraFin" class="form-label">Hora Fin</label>
+                                <input type="time" class="form-control" id="editarHoraFin" name="hora_fin">
+                            </div>
+                        </div>
+                        <div id="editarJornadaPartido" class="jornada-seccion d-none">
+                            <div class="mb-3">
+                                <label for="editarHoraInicioM" class="form-label">Hora Inicio Mañana</label>
+                                <input type="time" class="form-control" id="editarHoraInicioM" name="hora_inicio_m">
+                            </div>
+                            <div class="mb-3">
+                                <label for="editarHoraFinM" class="form-label">Hora Fin Mañana</label>
+                                <input type="time" class="form-control" id="editarHoraFinM" name="hora_fin_m">
+                            </div>
+                            <div class="mb-3">
+                                <label for="editarHoraInicioT" class="form-label">Hora Inicio Tarde</label>
+                                <input type="time" class="form-control" id="editarHoraInicioT" name="hora_inicio_t">
+                            </div>
+                            <div class="mb-3">
+                                <label for="editarHoraFinT" class="form-label">Hora Fin Tarde</label>
+                                <input type="time" class="form-control" id="editarHoraFinT" name="hora_fin_t">
+                            </div>
                         </div>
                         <button type="submit" class="btn btn-primary">Guardar Cambios</button>
                     </form>
@@ -146,18 +201,39 @@
 
     <!-- Barra de navegación inferior -->
     <div class="bottom-nav d-flex">
-        <a href="servicios.html" class="active"><i class="bi bi-scissors"></i><br>Servicios</a>
+        <a href="servicios.html"><i class="bi bi-scissors"></i><br>Servicios</a>
         <a href="personal.html"><i class="bi bi-people"></i><br>Personal</a>
-        <a href="horarios.html"><i class="bi bi-clock"></i><br>Horarios</a>
+        <a href="horarios.html" class="active"><i class="bi bi-clock"></i><br>Horarios</a>
         <a href="mi_tienda.html"><i class="bi bi-shop"></i><br>Mi Tienda</a>
     </div>
 
-    <!-- Incluyendo jQuery y Bootstrap JS -->
+    <!-- Incluyendo jQuery, Bootstrap JS y Toastr -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
     <script src="js/horarios.js"></script>
     <script>
+        function toggleJornada(tipo) {
+            if (tipo === 'partido') {
+                document.getElementById('jornadaPartido').classList.remove('d-none');
+                document.getElementById('jornadaContinuo').classList.add('d-none');
+            } else {
+                document.getElementById('jornadaPartido').classList.add('d-none');
+                document.getElementById('jornadaContinuo').classList.remove('d-none');
+            }
+        }
+
+        function toggleEditarJornada(tipo) {
+            if (tipo === 'partido') {
+                document.getElementById('editarJornadaPartido').classList.remove('d-none');
+                document.getElementById('editarJornadaContinuo').classList.add('d-none');
+            } else {
+                document.getElementById('editarJornadaPartido').classList.add('d-none');
+                document.getElementById('editarJornadaContinuo').classList.remove('d-none');
+            }
+        }
+
         // Cargar el menú offcanvas y la barra de navegación desde archivos HTML externos
         fetch('menu.html')
             .then(response => response.text())
@@ -183,6 +259,25 @@
                     }
                 });
             });
+
+        // Cargar datos del negocio
+        fetch('php/ver_tienda.php')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok ' + response.statusText);
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.status === 'success') {
+                    const tienda = data.tienda;
+                    document.getElementById('nombreNegocioActual').innerText = tienda.nombre_negocio + " - Horarios";
+
+                } else {
+                    document.getElementById('formConfigTienda').style.display = 'block';
+                }
+            })
+            .catch(error => console.error('Error:', error));
     </script>
 </body>
 </html>

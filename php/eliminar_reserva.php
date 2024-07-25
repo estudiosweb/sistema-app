@@ -4,9 +4,9 @@ include 'conectar.php';
 $response = array();
 
 try {
-    $id = intval($_GET['id']);
+    $id = $_GET['id'];
 
-    $sql = "DELETE FROM reservas WHERE id='$id'";
+    $sql = "DELETE FROM reservas WHERE id = '$id'";
 
     if ($conn->query($sql) === TRUE) {
         $response['status'] = 'success';

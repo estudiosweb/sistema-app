@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="css/estilo.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.0/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
     <style>
         body {
             background-color: #f8f9fa; /* Light background */
@@ -56,12 +57,15 @@
         .dark-mode .bottom-nav a {
             color: #ccc;
         }
+        .btn-full-width {
+            width: 100%;
+        }
     </style>
 </head>
 <body>
     <!-- Contenedor del menú superior -->
     <div class="container-fluid bg-light p-3 d-flex justify-content-between align-items-center">
-        <h1 class="h3 mb-0">Nombre del Salón - Servicios</h1>
+        <h1 class="h3 mb-0" id="nombreNegocioActual">Nombre del Salón - Mi Tienda</h1>
         <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasMenu" aria-controls="offcanvasMenu">
             ☰
         </button>
@@ -74,8 +78,8 @@
         <h1 class="text-center mb-4 small-header">Servicios</h1>
         <!-- Botones para agregar servicio y categoría -->
         <div class="mb-3 text-end">
-            <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalAgregarServicio" id="btnAgregarServicio">Agregar Servicio</button>
-            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalAgregarCategoria">Agregar Categoría</button>
+            <button class="btn btn-success btn-full-width" data-bs-toggle="modal" data-bs-target="#modalAgregarServicio" id="btnAgregarServicio">Agregar Servicio</button>
+            <button class="btn btn-primary btn-full-width mt-2" data-bs-toggle="modal" data-bs-target="#modalAgregarCategoria">Agregar Categoría</button>
         </div>
 
         <!-- Alerta para categorías -->
@@ -100,31 +104,37 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form id="formAgregarServicio">
+                    <form id="formAgregarServicio" enctype="multipart/form-data">
                         <div class="mb-3">
-                            <label for="nombre" class="form-label">Nombre</label>
+                            <label for="nombre" class="form-label"><i class="fas fa-tag"></i> Nombre</label>
                             <input type="text" class="form-control" id="nombre" name="nombre" required>
                         </div>
                         <div class="mb-3">
-                            <label for="categoria" class="form-label">Categoría</label>
+                            <label for="categoria" class="form-label"><i class="fas fa-list"></i> Categoría</label>
                             <select class="form-select" id="categoria" name="categoria" required>
                                 <!-- Categorías cargadas dinámicamente -->
                             </select>
                         </div>
                         <div class="mb-3">
-                            <label for="duracion" class="form-label">Duración (minutos)</label>
-                            <input type="number" class="form-control" id="duracion" name="duracion" required>
+                            <label for="duracion" class="form-label"><i class="fas fa-clock"></i> Duración (minutos)</label>
+                            <select class="form-select" id="duracion" name="duracion" required>
+                                <option value="15">15</option>
+                                <option value="30">30</option>
+                                <option value="60">60</option>
+                                <option value="90">90</option>
+                                <option value="120">120</option>
+                            </select>
                         </div>
                         <div class="mb-3">
-                            <label for="precio" class="form-label">Precio</label>
+                            <label for="precio" class="form-label"><i class="fas fa-dollar-sign"></i> Precio</label>
                             <input type="number" class="form-control" id="precio" name="precio" required>
                         </div>
                         <div class="mb-3">
-                            <label for="descripcion" class="form-label">Descripción</label>
+                            <label for="descripcion" class="form-label"><i class="fas fa-info-circle"></i> Descripción</label>
                             <textarea class="form-control" id="descripcion" name="descripcion" rows="3" required></textarea>
                         </div>
                         <div class="mb-3">
-                            <label for="fotografia" class="form-label">Fotografía</label>
+                            <label for="fotografia" class="form-label"><i class="fas fa-camera"></i> Fotografía</label>
                             <input type="file" class="form-control" id="fotografia" name="fotografia" accept="image/*">
                         </div>
                         <button type="submit" class="btn btn-primary">Guardar Servicio</button>
@@ -143,32 +153,38 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form id="formEditarServicio">
+                    <form id="formEditarServicio" enctype="multipart/form-data">
                         <input type="hidden" id="editarServicioId" name="id">
                         <div class="mb-3">
-                            <label for="editarNombre" class="form-label">Nombre</label>
+                            <label for="editarNombre" class="form-label"><i class="fas fa-tag"></i> Nombre</label>
                             <input type="text" class="form-control" id="editarNombre" name="nombre" required>
                         </div>
                         <div class="mb-3">
-                            <label for="editarCategoria" class="form-label">Categoría</label>
+                            <label for="editarCategoria" class="form-label"><i class="fas fa-list"></i> Categoría</label>
                             <select class="form-select" id="editarCategoria" name="categoria" required>
                                 <!-- Categorías cargadas dinámicamente -->
                             </select>
                         </div>
                         <div class="mb-3">
-                            <label for="editarDuracion" class="form-label">Duración (minutos)</label>
-                            <input type="number" class="form-control" id="editarDuracion" name="duracion" required>
+                            <label for="editarDuracion" class="form-label"><i class="fas fa-clock"></i> Duración (minutos)</label>
+                            <select class="form-select" id="editarDuracion" name="duracion" required>
+                                <option value="15">15</option>
+                                <option value="30">30</option>
+                                <option value="60">60</option>
+                                <option value="90">90</option>
+                                <option value="120">120</option>
+                            </select>
                         </div>
                         <div class="mb-3">
-                            <label for="editarPrecio" class="form-label">Precio</label>
+                            <label for="editarPrecio" class="form-label"><i class="fas fa-dollar-sign"></i> Precio</label>
                             <input type="number" class="form-control" id="editarPrecio" name="precio" required>
                         </div>
                         <div class="mb-3">
-                            <label for="editarDescripcion" class="form-label">Descripción</label>
+                            <label for="editarDescripcion" class="form-label"><i class="fas fa-info-circle"></i> Descripción</label>
                             <textarea class="form-control" id="editarDescripcion" name="descripcion" rows="3" required></textarea>
                         </div>
                         <div class="mb-3">
-                            <label for="editarFotografia" class="form-label">Fotografía</label>
+                            <label for="editarFotografia" class="form-label"><i class="fas fa-camera"></i> Fotografía</label>
                             <input type="file" class="form-control" id="editarFotografia" name="fotografia" accept="image/*">
                         </div>
                         <button type="submit" class="btn btn-primary">Guardar Cambios</button>
@@ -189,7 +205,7 @@
                 <div class="modal-body">
                     <form id="formAgregarCategoria">
                         <div class="mb-3">
-                            <label for="nombreCategoria" class="form-label">Nombre de la Categoría</label>
+                            <label for="nombreCategoria" class="form-label"><i class="fas fa-list"></i> Nombre de la Categoría</label>
                             <input type="text" class="form-control" id="nombreCategoria" name="nombreCategoria" required>
                         </div>
                         <button type="submit" class="btn btn-primary">Guardar Categoría</button>
@@ -211,7 +227,7 @@
                     <form id="formEditarCategoria">
                         <input type="hidden" id="editarCategoriaId" name="id">
                         <div class="mb-3">
-                            <label for="editarNombreCategoria" class="form-label">Nombre de la Categoría</label>
+                            <label for="editarNombreCategoria" class="form-label"><i class="fas fa-list"></i> Nombre de la Categoría</label>
                             <input type="text" class="form-control" id="editarNombreCategoria" name="nombre" required>
                         </div>
                         <button type="submit" class="btn btn-primary">Guardar Cambios</button>
@@ -220,6 +236,7 @@
             </div>
         </div>
     </div>
+
     <!-- Barra de navegación inferior -->
     <div class="bottom-nav d-flex">
         <a href="servicios.html" class="active"><i class="bi bi-scissors"></i><br>Servicios</a>
@@ -227,10 +244,11 @@
         <a href="horarios.html"><i class="bi bi-clock"></i><br>Horarios</a>
         <a href="mi_tienda.html"><i class="bi bi-shop"></i><br>Mi Tienda</a>
     </div>
-    <!-- Incluyendo jQuery y Bootstrap JS -->
+    <!-- Incluyendo jQuery, Bootstrap JS y Toastr -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
     <script src="js/servicios.js"></script>
     <script>
         // Cargar el menú offcanvas
@@ -258,6 +276,25 @@
                     }
                 });
             });
+
+        // Cargar datos del negocio
+        fetch('php/ver_tienda.php')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok ' + response.statusText);
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.status === 'success') {
+                    const tienda = data.tienda;
+                    document.getElementById('nombreNegocioActual').innerText = tienda.nombre_negocio + " - Servicios";
+                    
+                } else {
+                    document.getElementById('formConfigTienda').style.display = 'block';
+                }
+            })
+            .catch(error => console.error('Error:', error));
     </script>
 </body>
 </html>

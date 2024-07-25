@@ -4,8 +4,20 @@ include 'conectar.php';
 $response = array();
 
 try {
-    $sql = "SELECT * FROM clientes";
-    $result = $conn->query($sql);
+    $term = isset($_GET['q']) ? $_GET['q'] : '';
+    
+    if ($term !== '') {
+        $sql = "SELECT id, nombre FROM clientes WHERE nombre LIKE ? LIMIT 10";
+        $stmt = $conn->prepare($sql);
+        $term = '%' . $term . '%';
+        $stmt->bind_param('s', $term);
+    } else {
+        $sql = "SELECT * FROM clientes";
+        $stmt = $conn->prepare($sql);
+    }
+
+    $stmt->execute();
+    $result = $stmt->get_result();
 
     if (!$result) {
         throw new Exception("Error en la consulta SQL: " . $conn->error);
@@ -16,13 +28,8 @@ try {
         $clientes[] = $row;
     }
 
-    if (count($clientes) > 0) {
-        $response['status'] = 'success';
-        $response['clientes'] = $clientes;
-    } else {
-        $response['status'] = 'error';
-        $response['message'] = 'No se encontraron clientes';
-    }
+    $response['status'] = 'success';
+    $response['clientes'] = $clientes;
 } catch (Exception $e) {
     $response['status'] = 'error';
     $response['message'] = $e->getMessage();

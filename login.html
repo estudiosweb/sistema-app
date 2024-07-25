@@ -7,31 +7,104 @@
     <link rel="stylesheet" href="css/normalize.css">
     <link rel="stylesheet" href="css/estilo.css">
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.5.0/font/bootstrap-icons.min.css">
+    <style>
+        body {
+            background: linear-gradient(132deg, #ffffff, #d1b47d, #5f97bd, #666666);
+            background-size: 400% 400%;
+            animation: Gradient 15s ease infinite;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        @keyframes Gradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        h1 {
+            color: #FFFF;
+            font-family: 'Open Sans';
+            font-weight: bold;
+            text-align: center;
+            margin-top: 20px;
+        }
+        .form-control {
+            border-radius: 50px;
+            padding-left: 45px;
+            padding-right: 45px;
+        }
+        .form-group {
+            position: relative;
+            margin-bottom: 20px;
+        }
+        .form-group .form-icon {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            left: 15px;
+            color: #555;
+        }
+        .toggle-password {
+            position: absolute;
+            top: 50%;
+            right: 15px;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: #555;
+        }
+        footer {
+            text-align: center;
+            padding: 10px 0;
+            background-color: rgba(0, 0, 0, 0.2);
+            color: white;
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+        }
+        .btnlogeo {
+            border-radius: 50px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border: none;
+            padding-top: 8px;
+            padding-bottom: 8px;
+        }
+    </style>
 </head>
 <body>
     <div class="container">
-        <h1 class="text-center mt-5">Login</h1>
-        <div class="row justify-content-center mt-5">
+        <h1 class="text-center">Login</h1>
+        <div class="row justify-content-center mt-3">
             <div class="col-md-6">
                 <form id="loginForm">
                     <div class="form-group">
-                        <label for="username">Nombre de usuario:</label>
-                        <input type="text" class="form-control" id="username" name="username" required>
+                        <i class="bi bi-person form-icon"></i>
+                        <label for="username" class="sr-only">Nombre de usuario:</label>
+                        <input type="text" class="form-control" id="username" name="username" placeholder="Nombre de usuario" required>
                     </div>
                     <div class="form-group">
-                        <label for="password">Contraseña:</label>
-                        <input type="password" class="form-control" id="password" name="password" required>
+                        <i class="bi bi-lock form-icon"></i>
+                        <label for="password" class="sr-only">Contraseña:</label>
+                        <input type="password" class="form-control" id="password" name="password" placeholder="Contraseña" required>
+                        <span class="toggle-password">
+                            <i class="bi bi-eye-slash" id="togglePassword"></i>
+                        </span>
                     </div>
-                    <button type="submit" class="btn btn-primary">Ingresar</button>
+                    <button type="submit" class="btnlogeo btn-block">Ingresar</button>
                 </form>
             </div>
         </div>
     </div>
+    <footer>
+        &copy; <?php echo date("Y"); ?> Salón de Belleza. Todos los derechos reservados.
+    </footer>
     <script>
         document.getElementById('loginForm').addEventListener('submit', function(event) {
             event.preventDefault();
-            const formData = new FormData(event.target);
-            fetch('php/autenticar.php', {
+            const formData = new FormData(document.getElementById('loginForm'));
+            fetch('php/login.php', {
                 method: 'POST',
                 body: formData
             })
@@ -41,8 +114,27 @@
                     window.location.href = 'index.html';
                 } else {
                     alert(data.message);
+                    console.error(data);
                 }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Error de red');
             });
+        });
+
+        document.getElementById('togglePassword').addEventListener('click', function () {
+            const password = document.getElementById('password');
+            const icon = document.getElementById('togglePassword');
+            if (password.type === 'password') {
+                password.type = 'text';
+                icon.classList.remove('bi-eye-slash');
+                icon.classList.add('bi-eye');
+            } else {
+                password.type = 'password';
+                icon.classList.remove('bi-eye');
+                icon.classList.add('bi-eye-slash');
+            }
         });
     </script>
 </body>

@@ -1,30 +1,50 @@
 <?php
-include 'conectar.php';
+header('Content-Type: application/json');
 
-$response = array();
-
-try {
-    $cliente_id = $_POST['cliente_id'];
-    $servicio_id = $_POST['servicio'];
-    $fecha_reserva = $_POST['fecha_reserva'];
-    $hora_reserva = $_POST['hora_reserva'];
-
-    $sql = "INSERT INTO reservas (cliente_id, servicio_id, fecha_reserva, hora_reserva) 
-            VALUES ('$cliente_id', '$servicio_id', '$fecha_reserva', '$hora_reserva')";
-
-    if ($conn->query($sql) === TRUE) {
-        $response['status'] = 'success';
-    } else {
-        throw new Exception("Error al insertar la reserva: " . $conn->error);
-    }
-
-} catch (Exception $e) {
-    $response['status'] = 'error';
-    $response['message'] = $e->getMessage();
+session_start();
+if (!isset($_SESSION['username']) || $_SESSION['role'] !== 'admin') {
+    echo json_encode(['status' => 'error', 'message' => 'Acceso no autorizado']);
+    exit;
 }
 
-$conn->close();
+require 'conectar.php';
 
-header('Content-Type: application/json');
-echo json_encode($response);
+$cliente_id = filter_input(INPUT_POST, 'cliente_id', FILTER_VALIDATE_INT);
+$servicio = filter_input(INPUT_POST, 'servicio', FILTER_SANITIZE_STRING);
+$fecha_reserva = filter_input(INPUT_POST, 'fecha_reserva', FILTER_SANITIZE_STRING);
+$hora_reserva = filter_input(INPUT_POST, 'hora_reserva', FILTER_SANITIZE_STRING);
+$personal = filter_input(INPUT_POST, 'personal', FILTER_VALIDATE_INT);
+$comentario = filter_input(INPUT_POST, 'comentario', FILTER_SANITIZE_STRING);
+
+if (!$cliente_id || !$servicio || !$fecha_reserva || !$hora_reserva || !$personal) {
+    echo json_encode(['status' => 'error', 'message' => 'Faltan datos necesarios para crear la reserva.']);
+    exit;
+}
+
+try {
+    $fecha_reserva_dt = DateTime::createFromFormat('Y-m-d', $fecha_reserva);
+    $hora_reserva_dt = DateTime::createFromFormat('H:i', $hora_reserva);
+    if (!$fecha_reserva_dt || !$hora_reserva_dt) {
+        throw new Exception('Formato de fecha u hora inválido.');
+    }
+
+    $stmt = $conn->prepare("INSERT INTO reservas (cliente_id, servicio, fecha_reserva, hora_reserva, personal_id, comentario) VALUES (?, ?, ?, ?, ?, ?)");
+    if (!$stmt) {
+        throw new Exception('Error en la preparación de la consulta: ' . $conn->error);
+    }
+
+    $stmt->bind_param("isssis", $cliente_id, $servicio, $fecha_reserva_dt->format('Y-m-d'), $hora_reserva_dt->format('H:i'), $personal, $comentario);
+
+    if ($stmt->execute()) {
+        echo json_encode(['status' => 'success']);
+    } else {
+        throw new Exception('Error al crear la reserva: ' . $stmt->error);
+    }
+
+    $stmt->close();
+    $conn->close();
+} catch (Exception $e) {
+    error_log('Error al crear la reserva: ' . $e->getMessage());
+    echo json_encode(['status' => 'error', 'message' => $e->getMessage()]);
+}
 ?>
